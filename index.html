@@ -205,11 +205,17 @@
     display: flex; align-items: center; justify-content: center;
   }
   .monitor-screen .media {
+    position: absolute; inset: 0;
     width: 100%; height: 100%;
     object-fit: cover;
-    transition: transform .25s ease, filter .25s ease;
+    transition: transform .25s ease, filter .25s ease, opacity .18s ease;
     pointer-events: none;
+    background: #000;
   }
+  /* el vídeo sólo se ve mientras se reproduce; en pausa o al acabar, la foto */
+  .monitor-screen #video { opacity: 0; }
+  .monitor-screen.has-video.playing #video { opacity: 1; }
+  .monitor-screen.has-video.playing #media { opacity: 0; }
   .monitor-screen .rec {
     position: absolute; top: 8px; left: 10px;
     display: none;
@@ -275,6 +281,8 @@
   .tbtn:hover:not(:disabled) { background: var(--panel-2); color: #fff; }
   .tbtn.play { font-size: 18px; }
   .tbtn:disabled { opacity: .28; cursor: default; }
+  .tbtn.sound.muted { color: var(--text-dim); }
+  .tbtn.sound.muted:hover { color: #fff; }
 
   /* ---- Right column: Metadatos + Sobre mí ---- */
   .right-col {
@@ -283,21 +291,14 @@
     min-height: 0;
   }
   .right-col .panel { background: var(--panel-dark); }
-  .meta-search { padding: 8px 12px; flex-shrink: 0; }
-  .meta-search input {
-    width: 100%;
-    background: #fff; color: #222;
-    border: none; border-radius: 3px;
-    padding: 6px 10px; font-size: 12px;
-    outline: none;
-  }
-  .contact { padding: 4px 16px 14px; }
+  .contact { padding: 10px 18px 18px; }
   .contact h3 {
-    color: #fff; font-size: 16px; letter-spacing: 2px; font-weight: 800;
-    padding: 8px 0 6px;
+    color: #fff; font-size: 18px; letter-spacing: 2px; font-weight: 800;
+    padding: 8px 0 8px;
     cursor: pointer;
     display: flex; align-items: center; gap: 10px;
   }
+  .contact h3:hover { color: var(--accent); }
   .contact h3 .chev {
     color: var(--text-dim); font-weight: 400; font-size: 15px;
     display: inline-block;
@@ -307,12 +308,12 @@
   .contact.collapsed h3 .chev { transform: rotate(0deg); }
   .contact .contact-body {
     overflow: hidden;
-    max-height: 80px;
+    max-height: 130px;
     transition: max-height .25s ease, opacity .25s;
     opacity: 1;
   }
   .contact.collapsed .contact-body { max-height: 0; opacity: 0; }
-  .contact p { margin: 3px 0 3px 26px; font-size: 13.5px; }
+  .contact p { margin: 8px 0 8px 28px; font-size: 15px; }
   .contact .label { color: var(--text-dim); }
   .contact a { color: #fff; font-weight: 700; text-decoration: none; border-bottom: 1px dotted transparent; }
   .contact a:hover { border-bottom-color: var(--accent); color: var(--accent); }
@@ -383,6 +384,14 @@
     cursor: pointer;
   }
   .ruler span { position: absolute; top: 4px; transform: translateX(3px); pointer-events: none; }
+  .ruler .tl-head {
+    position: absolute; top: 0; bottom: 0;
+    width: 9px; margin-left: -4px;
+    background: var(--accent);
+    border-radius: 2px;
+    left: 0%;
+    pointer-events: none;
+  }
 
   .tracks-wrap { display: flex; min-height: 0; position: relative; }
   .track-heads {
@@ -614,7 +623,7 @@
     <!-- VENTANA 01: experiencia laboral -->
     <section class="panel">
       <div class="panel-header">
-        <h2>＼ EXPERIENCIA LABORAL</h2>
+        <h2>EXPERIENCIA LABORAL</h2>
         <span class="hamburger">≡</span>
       </div>
       <div class="searchrow">
@@ -638,6 +647,7 @@
       </div>
       <div class="monitor-screen-wrap">
         <div class="monitor-screen" id="screen" onclick="togglePlay()" title="Clic para reproducir / pausar">
+          <video class="media" id="video" playsinline preload="metadata"></video>
           <img class="media" id="media" src="" alt="Fotografía del monitor">
           <span class="rec">REC</span>
           <span class="hint">clic = play / pausa</span>
@@ -659,7 +669,7 @@
           </select>
           <span class="tc current" id="tcCurrent">00:00:00:00</span>
         </div>
-        <div class="scrubber" id="scrubber" onclick="seek(event)">
+        <div class="scrubber" id="scrubber">
           <div class="thumb" id="scrubThumb"></div>
         </div>
         <div class="buttons">
@@ -668,6 +678,7 @@
           <button class="tbtn play" id="playBtn" onclick="togglePlay()" title="Reproducir">▶</button>
           <button class="tbtn" disabled title="Desactivado">▮▶</button>
           <button class="tbtn" onclick="jumpTo(100)" title="Ir al final">⏭</button>
+          <button class="tbtn sound" id="muteBtn" onclick="toggleMute()" title="Silenciar / activar sonido">🔊</button>
           <button class="tbtn" disabled title="Desactivado">🚩</button>
           <button class="tbtn" disabled title="Desactivado">📷</button>
         </div>
@@ -681,9 +692,9 @@
           <h2>Metadatos</h2>
           <span class="hamburger">≡</span>
         </div>
-        <div class="meta-search"><input type="text" placeholder="" aria-label="buscar metadatos"></div>
         <div class="contact" id="contactBox">
-          <h3 onclick="document.getElementById('contactBox').classList.toggle('collapsed')">
+          <h3 onclick="document.getElementById('contactBox').classList.toggle('collapsed')"
+              title="Clic para cerrar / abrir">
             <span class="chev">›</span>CONTACTO
           </h3>
           <div class="contact-body">
@@ -714,9 +725,11 @@
       <span class="tab">EXPERIENCIA LABORAL ≡</span>
       <span class="tc" id="tcTimeline">00:00:00:00</span>
       <span>✂ 🧲 ⇤ ⇥</span>
-      <span style="margin-left:auto">Pasa el ratón por los clips · clic para abrir la ficha</span>
+      <span style="margin-left:auto">Clic en un clip para abrir la ficha · arrastra la barra azul para mover el vídeo</span>
     </div>
-    <div class="ruler" id="ruler" onclick="seekRuler(event)"></div>
+    <div class="ruler" id="ruler" title="Clic o arrastra para mover el vídeo a ese punto">
+      <div class="tl-head" id="tlHead"></div>
+    </div>
     <div class="tracks-wrap">
       <div class="track-heads">
         <div class="track-head h-v2"><span class="dot on" onclick="this.classList.toggle('on')"></span><b>V2</b> fx</div>
@@ -1000,38 +1013,42 @@ function closeModal() {
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") closeModal();
   if (e.key === " " && !e.target.matches("input, select")) { e.preventDefault(); togglePlay(); }
+  if ((e.key === "m" || e.key === "M") && !e.target.matches("input, select")) toggleMute();
 });
 
 /* ================= PLAYBACK ================= */
-const FPS = 25;
+const FPS = 24;
 let virtualDuration = CONFIG.duracionSimulada || 200;
-let video = null;                   // filled if showreel.mp4 exists
-let playing = false, pos = 0, rafId = null, lastT = null;
+let video = null;                   // se rellena si el vídeo de config.js carga
+let playing = false, pos = 0, rafId = null, lastT = null, muted = false, scrubbing = false;
 
 const playhead = document.getElementById("playhead");
+const tlHead = document.getElementById("tlHead");
 const scrubThumb = document.getElementById("scrubThumb");
 const screen = document.getElementById("screen");
 const media = document.getElementById("media");
+const videoEl = document.getElementById("video");
 const playBtn = document.getElementById("playBtn");
+const muteBtn = document.getElementById("muteBtn");
 
-function duration() { return video ? video.duration : virtualDuration; }
+function duration() { return video && video.duration ? video.duration : virtualDuration; }
 
-/* if the video file from config.js exists next to cv.html, it takes over */
-(function tryVideo() {
-  if (!CONFIG.archivoVideo) return;
-  const v = document.createElement("video");
-  v.src = CONFIG.archivoVideo;
-  v.preload = "metadata";
-  v.playsInline = true;
-  v.className = "media";
-  v.addEventListener("loadedmetadata", () => {
-    video = v;
-    media.replaceWith(v);
-    v.id = "media";
-    v.addEventListener("ended", () => { if (playing) togglePlay(); });
+/* el vídeo de config.js manda: la línea de tiempo se mueve con él */
+(function initVideo() {
+  if (!CONFIG.archivoVideo) { videoEl.remove(); return; }
+  videoEl.addEventListener("loadedmetadata", () => {
+    video = videoEl;
+    video.muted = muted;
+    screen.classList.add("has-video");
     buildRuler();
     render();
   });
+  videoEl.addEventListener("timeupdate", () => {
+    if (video && video.duration && !scrubbing) { pos = video.currentTime / video.duration * 100; render(); }
+  });
+  videoEl.addEventListener("ended", () => { pos = 100; stopPlayback(); });   // al acabar, vuelve la foto
+  videoEl.addEventListener("error", () => { video = null; videoEl.remove(); buildRuler(); render(); });
+  videoEl.src = CONFIG.archivoVideo;
 })();
 
 function fmtTC(p) {
@@ -1043,6 +1060,7 @@ function fmtTC(p) {
 }
 function render() {
   playhead.style.left = pos + "%";
+  tlHead.style.left = pos + "%";
   scrubThumb.style.left = pos + "%";
   document.getElementById("tcCurrent").textContent = fmtTC(pos);
   document.getElementById("tcTimeline").textContent = fmtTC(pos);
@@ -1053,7 +1071,7 @@ function tick(t) {
   } else {
     if (lastT !== null) {
       pos += (t - lastT) / 1000 / virtualDuration * 100;
-      if (pos >= 100) { pos = 100; togglePlay(); }
+      if (pos >= 100) { pos = 100; stopPlayback(); return; }
     }
     lastT = t;
   }
@@ -1061,30 +1079,67 @@ function tick(t) {
   animateMeters();
   if (playing) rafId = requestAnimationFrame(tick);
 }
-function togglePlay() {
-  playing = !playing;
-  playBtn.textContent = playing ? "⏸" : "▶";
-  playBtn.title = playing ? "Pausa" : "Reproducir";
-  screen.classList.toggle("playing", playing);
+function startPlayback() {
+  if (video && pos >= 99.99) setPos(0);        // si estaba al final, empieza de nuevo
+  playing = true;
   lastT = null;
-  if (video) { playing ? video.play() : video.pause(); }
-  if (playing) rafId = requestAnimationFrame(tick);
-  else { cancelAnimationFrame(rafId); resetMeters(); }
+  playBtn.textContent = "⏸";
+  playBtn.title = "Pausa";
+  screen.classList.add("playing");             // se ve el vídeo
+  if (video) { const p = video.play(); if (p && p.catch) p.catch(() => {}); }
+  rafId = requestAnimationFrame(tick);
 }
+function stopPlayback() {
+  playing = false;
+  playBtn.textContent = "▶";
+  playBtn.title = "Reproducir";
+  screen.classList.remove("playing");          // vuelve la foto
+  if (video) video.pause();
+  cancelAnimationFrame(rafId);
+  resetMeters();
+  render();
+}
+function togglePlay() { playing ? stopPlayback() : startPlayback(); }
+
+function toggleMute() {
+  muted = !muted;
+  if (video) video.muted = muted;
+  muteBtn.textContent = muted ? "🔇" : "🔊";
+  muteBtn.classList.toggle("muted", muted);
+  muteBtn.title = muted ? "Activar sonido" : "Silenciar";
+}
+
 function setPos(p) {
   pos = Math.min(100, Math.max(0, p));
   if (video && video.duration) video.currentTime = video.duration * pos / 100;
   render();
 }
-function seek(e) {
-  const r = document.getElementById("scrubber").getBoundingClientRect();
-  setPos((e.clientX - r.left) / r.width * 100);
-}
-function seekRuler(e) {
-  const r = document.getElementById("ruler").getBoundingClientRect();
-  setPos((e.clientX - r.left) / r.width * 100);
-}
 function jumpTo(p) { setPos(p); }
+
+/* clic o arrastre sobre la regla del timeline y sobre el scrubber del monitor */
+function makeScrubbable(el) {
+  let dragging = false;
+  const apply = e => {
+    const r = el.getBoundingClientRect();
+    setPos((e.clientX - r.left) / r.width * 100);
+  };
+  el.addEventListener("pointerdown", e => {
+    dragging = scrubbing = true;
+    el.setPointerCapture(e.pointerId);
+    apply(e);
+    e.preventDefault();
+  });
+  el.addEventListener("pointermove", e => { if (dragging) apply(e); });
+  const end = e => {
+    if (!dragging) return;
+    dragging = scrubbing = false;
+    try { el.releasePointerCapture(e.pointerId); } catch (_) {}
+  };
+  el.addEventListener("pointerup", end);
+  el.addEventListener("pointercancel", end);
+}
+makeScrubbable(document.getElementById("ruler"));
+makeScrubbable(document.getElementById("scrubber"));
 
 /* ruler labels follow the real duration */
 function buildRuler() {
@@ -1105,12 +1160,12 @@ buildRuler();
 function applyFit() {
   const v = document.getElementById("fitSel").value;
   const scale = { fit: 1, "25": 0.25, "50": 0.5, "100": 2 }[v];
-  document.getElementById("media").style.transform = `scale(${scale})`;
+  document.querySelectorAll(".monitor-screen .media").forEach(m => m.style.transform = `scale(${scale})`);
 }
 function applyQuality() {
   const v = document.getElementById("qualSel").value;
   const filter = { full: "none", half: "blur(2px) saturate(.9)", quarter: "blur(4px) saturate(.75)" }[v];
-  document.getElementById("media").style.filter = filter;
+  document.querySelectorAll(".monitor-screen .media").forEach(m => m.style.filter = filter);
 }
 
 /* audio meters */

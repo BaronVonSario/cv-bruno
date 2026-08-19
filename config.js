@@ -22,6 +22,11 @@
      ancho  → cuánto ocupa (en % del total)
    Consejo: inicio + ancho no debe pasar de 100, y un clip debería
    empezar donde acaba el anterior para que no queden huecos.
+
+   OJO: estos números están calculados a partir de los códigos de
+   tiempo del vídeo (assets/experiencia-laboral.mp4), para que la
+   barra azul vaya pasando por cada clip justo cuando el vídeo habla
+   de ese trabajo. Si cambias el vídeo, hay que recalcularlos.
    ============================================================ */
 
 
@@ -47,10 +52,12 @@ const CONFIG = {
      Si existe un archivo de vídeo con este nombre junto al cv,
      se reproduce en el monitor y la línea de tiempo se sincroniza
      sola con su duración real.
+     Cuando el vídeo está en pausa o ha terminado se ve la foto;
+     mientras se reproduce, se ve el vídeo.
      Si NO hay vídeo, se muestra la foto y al dar al play se simula
      una reproducción que dura los segundos que pongas abajo.
   ------------------------------------------------------------ */
-  archivoVideo: "showreel.mp4",
+  archivoVideo: "assets/experiencia-laboral.mp4",
   fotoMonitor: "assets/foto.jpg",
   duracionSimulada: 200,                     // segundos (200 = 3 min 20 s)
 
@@ -122,7 +129,7 @@ const CONFIG = {
       etiquetas: ["ANTENA 3", "DIRECTO", "PLATÓ", "CONTROL", "FINAL CUT", "ESCALETAS"],
       pista: "V1",
       inicio: 0,
-      ancho: 16,
+      ancho: 5.733,
     },
 
     {
@@ -139,8 +146,8 @@ const CONFIG = {
       estado: "Renderizado",
       etiquetas: ["FICCIÓN", "EXTERIORES", "PLATÓ"],
       pista: "V1",
-      inicio: 16,
-      ancho: 6,
+      inicio: 5.733,
+      ancho: 5.237,
     },
 
     {
@@ -157,8 +164,8 @@ const CONFIG = {
       estado: "Renderizado",
       etiquetas: ["PROMOS", "ADOBE PREMIERE", "AFTER EFFECTS", "CONTENIDO", "TELEVISIÓN", "REMOTO"],
       pista: "V1",
-      inicio: 22,
-      ancho: 20,
+      inicio: 10.97,
+      ancho: 22.542,
     },
 
     {
@@ -175,8 +182,8 @@ const CONFIG = {
       estado: "Renderizado",
       etiquetas: ["DOCUS", "TV", "ESTRUCTURA"],
       pista: "V2",
-      inicio: 32,
-      ancho: 9,
+      inicio: 23.675,
+      ancho: 9.838,
     },
 
     /* --------- FREELANCE: un bloque especial con sus clientes dentro --------- */
@@ -189,8 +196,8 @@ const CONFIG = {
       logo: "assets/yo.png",
       descripcion: "Cinco clientes, cinco formas de contar. Pincha en cada uno para ver el trabajo desarrollado:",
       pista: "V1",
-      inicio: 42,
-      ancho: 20,
+      inicio: 33.512,
+      ancho: 29.407,
       colorClientes: "#a625a0",   // color de los clips pequeños de la fila V2
 
       clientes: [
@@ -205,8 +212,8 @@ const CONFIG = {
           productora: "Freelance. AfterShare",
           estado: "Renderizado",
           etiquetas: ["YOUTUBE", "FAMILIAR", "PREMIERE", "PHOTOSHOP", "DURACIONES"],
-          inicio: 43,
-          ancho: 3.6,
+          inicio: 33.512,
+          ancho: 5.379,
         },
         {
           titulo: "CAMPAÑA TURESPAÑA 2021",
@@ -219,22 +226,22 @@ const CONFIG = {
           productora: "Freelance. AfterShare",
           estado: "Renderizado",
           etiquetas: ["FINISH", "FORMATOS", "PREMIERE"],
-          inicio: 47,
-          ancho: 3.6,
+          inicio: 38.891,
+          ancho: 5.131,
         },
         {
           titulo: "ENERVIT",
           subcarpeta: "ENERVIT",
           puesto: "Editor en remoto",
           fechas: "2020 - 2021",
-          logo: null,
+          logo: "assets/enervit.png",
           descripcion: "Edición de stories y videos cortos con carácter divulgativo, enfocados a Facebook e Instagram.",
           tipoDeMedio: "Publicidad. Instagram",
           productora: "Freelance. AfterShare",
           estado: "Renderizado",
           etiquetas: ["STORIES", "VIDEOS CORTOS", "INSTAGRAM", "FACEBOOK", "FORMATOS"],
-          inicio: 51,
-          ancho: 3.6,
+          inicio: 44.023,
+          ancho: 5.273,
         },
         {
           titulo: "NATURGY",
@@ -247,8 +254,8 @@ const CONFIG = {
           productora: "Freelance. AfterShare",
           estado: "Renderizado",
           etiquetas: ["CORPORATIVO", "PREMIERE"],
-          inicio: 55,
-          ancho: 3.6,
+          inicio: 49.295,
+          ancho: 4.034,
         },
         {
           titulo: "PHILIPS SONICARE",
@@ -261,8 +268,8 @@ const CONFIG = {
           productora: "Freelance. AfterShare",
           estado: "Renderizado",
           etiquetas: ["PUBLICIDAD", "YOUTUBE", "PREMIERE", "REDACCIÓN", "FINISH"],
-          inicio: 59,
-          ancho: 3.6,
+          inicio: 53.33,
+          ancho: 9.59,
         },
       ],
     },
@@ -281,8 +288,8 @@ const CONFIG = {
       estado: "Renderizado",
       etiquetas: ["REPORTAJES", "TVE", "PREMIERE", "DIVULGATIVO"],
       pista: "V1",
-      inicio: 62,
-      ancho: 8,
+      inicio: 62.92,
+      ancho: 6.971,
     },
 
     {
@@ -299,8 +306,8 @@ const CONFIG = {
       estado: "Renderizado",
       etiquetas: ["REPORTAJES", "CONCURSO", "SFX", "GRAFISMOS", "TVE", "PREMIERE", "CREATIVO"],
       pista: "V1",
-      inicio: 70,
-      ancho: 16,
+      inicio: 69.891,
+      ancho: 9.059,
     },
 
     {
@@ -317,8 +324,8 @@ const CONFIG = {
       estado: "Work in Progress",
       etiquetas: ["CONCURSO", "CREATIVIDAD", "PREMIERE", "SFX", "GRAFISMOS"],
       pista: "V1",
-      inicio: 86,
-      ancho: 14,
+      inicio: 78.95,
+      ancho: 21.05,
     },
 
   ],

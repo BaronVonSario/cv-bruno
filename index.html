@@ -600,9 +600,9 @@
       <span class="active">Editar</span>
       <span onclick="openExport()">Exportar</span>
     </nav>
-    <div class="title">CV_BrunoBaezaVaqueiro <em>- Editado</em></div>
+    <div class="title"><span id="projTitle"></span> <em id="projSub"></em></div>
     <div class="right">
-      <span>BRUNO</span>
+      <span id="userName"></span>
       <span>⌕</span><span>🔊</span><span>⛶</span>
       <div class="avatar" title="Bruno Baeza Vaqueiro"></div>
     </div>
@@ -633,12 +633,12 @@
     <!-- VENTANA 02: monitor -->
     <section class="panel monitor">
       <div class="panel-header">
-        <h2><span class="dimlabel">Origen:</span> BRUNO BAEZA VAQUEIRO_EDITOR_AYUDANTE DE REALIZACIÓN</h2>
+        <h2><span class="dimlabel">Origen:</span> <span id="origenTitle"></span></h2>
         <span class="hamburger">≡</span>
       </div>
       <div class="monitor-screen-wrap">
         <div class="monitor-screen" id="screen" onclick="togglePlay()" title="Clic para reproducir / pausar">
-          <img class="media" id="media" src="assets/foto.jpg" alt="Bruno Baeza Vaqueiro editando">
+          <img class="media" id="media" src="" alt="Fotografía del monitor">
           <span class="rec">REC</span>
           <span class="hint">clic = play / pausa</span>
         </div>
@@ -687,8 +687,8 @@
             <span class="chev">›</span>CONTACTO
           </h3>
           <div class="contact-body">
-            <p><span class="label">TELÉFONO:</span> <a href="tel:+34626736182" onclick="event.stopPropagation()">626 73 61 82</a></p>
-            <p><span class="label">MAIL:</span> <a href="mailto:bruno.baezavaqueiro@gmail.com" onclick="event.stopPropagation()">bruno.baezavaqueiro@gmail.com</a></p>
+            <p><span class="label">TELÉFONO:</span> <a id="telLink" href="#" onclick="event.stopPropagation()"></a></p>
+            <p><span class="label">MAIL:</span> <a id="mailLink" href="#" onclick="event.stopPropagation()"></a></p>
           </div>
         </div>
       </section>
@@ -698,24 +698,7 @@
           <h2><span class="dimlabel">Texto:</span> SOBRE MÍ</h2>
           <span class="hamburger">≡</span>
         </div>
-        <div class="about">
-          <div class="about-row">
-            <span class="vtag">TXT_01</span>
-            <div class="txt">Amplia capacidad para trabajar en proyectos simultáneos y plazos cortos.</div>
-          </div>
-          <div class="about-row">
-            <span class="vtag">TXT_02</span>
-            <div class="txt">Creativo, con iniciativa y buena actitud de equipo.</div>
-          </div>
-          <div class="about-row">
-            <span class="vtag">TXT_03</span>
-            <div class="txt">Facilidad para integrarme en proyectos desde cero, sumando ideas para su desarrollo.</div>
-          </div>
-          <div class="about-row">
-            <span class="vtag">TXT_04</span>
-            <div class="txt">Más de soluciones que de problemas, más práctico que teórico, y tan empático como exigente.</div>
-          </div>
-        </div>
+        <div class="about" id="aboutRows"></div>
         <div class="meters">
           <div class="meter"><i id="m1"></i></div>
           <div class="meter"><i id="m2"></i></div>
@@ -762,198 +745,82 @@
   </div>
 </div>
 
+<script src="config.js"></script>
 <script>
-/* ================= DATA ================= */
-const ENTRIES = {
-  j1: {
-    title: "TU TIEMPO con Roberto Brasero",
-    role: "Ayudante de Realización",
-    dates: "2011 - 2013",
-    color: "var(--c-blue)", glow: "#2d8ceb",
-    logo: "assets/tutiempo.png",
-    desc: "Edición de colas y piezas cortas, lanzamiento de VTR y mapas meteorológicos desde control, control de tiempos y creación de escaletas. Realización en exterior del reportaje “Es tiempo de… Setas”.",
-    medio: "Televisión. Actualidad",
-    prod: "Atresmedia",
-    estado: "render",
-    tags: ["ANTENA 3", "DIRECTO", "PLATÓ", "CONTROL", "FINAL CUT", "ESCALETAS"]
-  },
-  j2: {
-    title: "VIS A VIS",
-    role: "Becario en postproducción",
-    dates: "2016 - 2017",
-    color: "var(--c-yellow)", glow: "#e8d117",
-    logo: "assets/vav.png",
-    desc: "Volcado y mantenimiento de discos duros, envío de material, aprendizaje básico de otros departamentos, aprendizaje en ficción.",
-    medio: "Televisión. Ficción",
-    prod: "Globomedia",
-    estado: "render",
-    tags: ["FICCIÓN", "EXTERIORES", "PLATÓ"]
-  },
-  j3: {
-    title: "¡HOLA! TV",
-    role: "Editor en remoto",
-    dates: "2017 - 2019",
-    color: "var(--c-red)", glow: "#d92b2b",
-    logo: "assets/holatv.png",
-    desc: "Editor y ayudante de realización del departamento de Promociones del canal. Edición de piezas promocionales tanto para programas de actualidad como empaquetados. Visionado estratégico de contenidos para la posterior edición y realización. Creación de promos mensuales elaboradas mediante el uso de templates dinámicos. Contacto directo en remoto con todos los demás departamentos de Latinoamérica.",
-    medio: "Televisión. Actualidad / Corazón",
-    prod: "Palmerita Films",
-    estado: "render",
-    tags: ["PROMOS", "ADOBE PREMIERE", "AFTER EFFECTS", "CONTENIDO", "TELEVISIÓN", "REMOTO"]
-  },
-  j4: {
-    title: "DOCUMENTALES “LA NOCHE DEL REY” Y “MADRID NOS UNE”",
-    role: "Editor en remoto",
-    dates: "2018",
-    color: "var(--c-gray)", glow: "#b5b5b5",
-    logo: "assets/telemadrid.png",
-    desc: "Volcado y estructuración de proyectos para la fase de edición. Edición de promociones cortas con carácter publicitario.",
-    medio: "Televisión. Documental",
-    prod: "Palmerita Films en colaboración con KOMETA para Telemadrid",
-    estado: "render",
-    tags: ["DOCUS", "TV", "ESTRUCTURA"]
-  },
-  bab: {
-    title: "BEBÉ A BORDO",
-    role: "Editor en remoto/presencial",
-    dates: "2020 - 2021",
-    color: "var(--c-magenta)", glow: "#e23bd0",
-    logo: "assets/bab.png",
-    desc: "Edición de piezas para YouTube en estrecha colaboración con el equipo de redacción. Ajuste de las piezas para distintas duraciones. Creación de miniaturas para el canal de YouTube.",
-    medio: "Youtube. Entretenimiento",
-    prod: "Freelance. AfterShare",
-    estado: "render",
-    tags: ["YOUTUBE", "FAMILIAR", "PREMIERE", "PHOTOSHOP", "DURACIONES"]
-  },
-  tur: {
-    title: "CAMPAÑA TURESPAÑA 2021",
-    role: "Editor en remoto",
-    dates: "2020 - 2021",
-    color: "var(--c-magenta)", glow: "#e23bd0",
-    logo: "assets/turespana.png",
-    desc: "Creación de piezas a nivel interno de la empresa y congresos. Edición de material para promociones de la campaña. Inclusión de grafismos y subtítulos en distintos idiomas y formatos.",
-    medio: "Web. Congresos",
-    prod: "Freelance. AfterShare",
-    estado: "render",
-    tags: ["FINISH", "FORMATOS", "PREMIERE"]
-  },
-  ene: {
-    title: "ENERVIT",
-    role: "Editor en remoto",
-    dates: "2020 - 2021",
-    color: "var(--c-magenta)", glow: "#e23bd0",
-    logo: null,
-    desc: "Edición de stories y videos cortos con carácter divulgativo, enfocados a Facebook e Instagram.",
-    medio: "Publicidad. Instagram",
-    prod: "Freelance. AfterShare",
-    estado: "render",
-    tags: ["STORIES", "VIDEOS CORTOS", "INSTAGRAM", "FACEBOOK", "FORMATOS"]
-  },
-  nat: {
-    title: "NATURGY",
-    role: "Editor en remoto",
-    dates: "2020 - 2021",
-    color: "var(--c-magenta)", glow: "#e23bd0",
-    logo: "assets/naturgy.png",
-    desc: "Edición de videos a nivel interno y promocional, con la inclusión de doblajes en distintos idiomas.",
-    medio: "Empresa",
-    prod: "Freelance. AfterShare",
-    estado: "render",
-    tags: ["CORPORATIVO", "PREMIERE"]
-  },
-  phi: {
-    title: "PHILIPS SONICARE",
-    role: "Editor en sala",
-    dates: "2020 - 2021",
-    color: "var(--c-magenta)", glow: "#e23bd0",
-    logo: "assets/philips.png",
-    desc: "Montaje y adaptación de entrevistas junto al equipo de redacción para la creación de versiones en distintos formatos y duraciones para YouTube.",
-    medio: "Publicidad. Youtube",
-    prod: "Freelance. AfterShare",
-    estado: "render",
-    tags: ["PUBLICIDAD", "YOUTUBE", "PREMIERE", "REDACCIÓN", "FINISH"]
-  },
-  j6: {
-    title: "Aquí la Tierra XL",
-    role: "Editor en sala",
-    dates: "2022",
-    color: "var(--c-green)", glow: "#27b833",
-    logo: "assets/alt.png",
-    desc: "Edición, selección de recursos y acabado creativo de reportajes. Musicalización y sonorización específica en función del tipo de reportaje.",
-    medio: "Televisión. Actualidad",
-    prod: "Catorce Comunicación para TVE",
-    estado: "render",
-    tags: ["REPORTAJES", "TVE", "PREMIERE", "DIVULGATIVO"]
-  },
-  j7: {
-    title: "Ahora o Nunca",
-    role: "Editor en sala",
-    dates: "2023 - 2024",
-    color: "var(--c-orange)", glow: "#f07818",
-    logo: "assets/aon.png",
-    desc: "Edición de piezas tipo concurso, más rápidas, dinámicas y divertidas, acompañándolas con sfx para reforzar la pieza. Trabajo directo con el equipo creativo y de grafismo para enriquecer las piezas. Edición, selección de recursos y acabado creativo de reportajes. Musicalización y sonorización específica en función del tipo de reportaje.",
-    medio: "Televisión. Actualidad/Entretenimiento",
-    prod: "Catorce Comunicación para TVE",
-    estado: "render",
-    tags: ["REPORTAJES", "CONCURSO", "SFX", "GRAFISMOS", "TVE", "PREMIERE", "CREATIVO"]
-  },
-  j8: {
-    title: "Lo Sabe, No Lo Sabe",
-    role: "Editor en sala",
-    dates: "2024 - Actualidad",
-    color: "var(--c-darkred)", glow: "#b01515",
-    logo: "assets/lsnls.png",
-    desc: "Edición final de concursantes previamente precortados. Sonorización, mezcla de efectos de sonido y musicalización. Inserción de grafismos y trabajo colaborativo con el departamento gráfico en la generación y aplicación de propuestas creativas. Libertad creativa a la hora de editar programas especiales (Navidad, Halloween…). Creación de piezas promocionales para la cadena si el programa lo requiere.",
-    medio: "Televisión. Concurso",
-    prod: "Producciones Mandarina para Cuatro",
-    estado: "wip",
-    tags: ["CONCURSO", "CREATIVIDAD", "PREMIERE", "SFX", "GRAFISMOS"]
+/* ============ CONSTRUCCIÓN DESDE config.js ============ */
+if (typeof CONFIG === "undefined") {
+  document.body.innerHTML = "<div style='padding:40px;font-size:16px;color:#fff;background:#111;height:100vh'>⚠ Falta el archivo <b>config.js</b> junto a este cv, o tiene un error de escritura (revisa comillas y comas, o deshaz el último cambio).</div>";
+  throw new Error("config.js missing or broken");
+}
+
+const ENTRIES = {};
+const BINS = [];
+const CLIPS = [];
+const FREELANCE_BRANDS = [];
+let FREE_GROUP = null;
+
+function toEntry(t, colorHeredado) {
+  return {
+    title: t.titulo,
+    role: t.puesto,
+    dates: t.fechas,
+    color: t.color || colorHeredado,
+    glow: t.color || colorHeredado,
+    logo: t.logo || null,
+    desc: t.descripcion,
+    medio: t.tipoDeMedio,
+    prod: t.productora,
+    estado: t.estado,
+    tags: t.etiquetas || []
+  };
+}
+
+CONFIG.trabajos.forEach((t, i) => {
+  if (t.clientes) {
+    FREE_GROUP = t;
+    BINS.push({
+      name: t.carpeta, color: t.color, entry: "free",
+      children: t.clientes.map((c, j) => ({ label: c.subcarpeta || c.titulo, entry: "cli" + j }))
+    });
+    CLIPS.push({ entry: "free", track: (t.pista || "V1").toLowerCase(), start: t.inicio, width: t.ancho, bg: t.color, logo: t.logo, label: t.titulo });
+    t.clientes.forEach((c, j) => {
+      const id = "cli" + j;
+      ENTRIES[id] = toEntry(c, t.color);
+      FREELANCE_BRANDS.push(id);
+      CLIPS.push({ entry: id, track: "v2", start: c.inicio, width: c.ancho, bg: t.colorClientes || t.color, logo: c.logo, label: c.titulo });
+    });
+  } else {
+    const id = "job" + i;
+    ENTRIES[id] = toEntry(t);
+    BINS.push({ name: t.carpeta, color: t.color, entry: id, children: [{ label: t.subcarpeta, entry: id }] });
+    CLIPS.push({ entry: id, track: (t.pista || "V1").toLowerCase(), start: t.inicio, width: t.ancho, bg: t.color, logo: t.logo });
   }
-};
-const FREELANCE_BRANDS = ["bab", "tur", "ene", "nat", "phi"];
+});
 
-/* left panel bins */
-const BINS = [
-  { name: "01_TU TIEMPO CON ROBERTO BRASERO (2011-2013)", color: "var(--c-blue)", entry: "j1",
-    children: [{ label: "AYUDANTE DE REALIZACIÓN", entry: "j1" }] },
-  { name: "02_VIS A VIS (2016-2017)", color: "var(--c-yellow)", entry: "j2",
-    children: [{ label: "WIP_EN PRÁCTICAS", entry: "j2" }] },
-  { name: "03_¡HOLA!TV (2017-2019)", color: "var(--c-red)", entry: "j3",
-    children: [{ label: "EDITOR DEL DEPARTAMENTO DE PROMOS", entry: "j3" }] },
-  { name: '04_"LA NOCHE DEL REY" Y "MADRID NOS UNE" (2018)', color: "var(--c-gray)", entry: "j4",
-    children: [{ label: "AYUDANTE DE REALIZACIÓN", entry: "j4" }] },
-  { name: "05_FREELANCE (2020-2021)", color: "var(--c-magenta)", entry: "free",
-    children: [
-      { label: "BEBÉ A BORDO", entry: "bab" },
-      { label: "TURESPAÑA 2021", entry: "tur" },
-      { label: "ENERVIT", entry: "ene" },
-      { label: "NATURGY", entry: "nat" },
-      { label: "PHILIPS SONICARE", entry: "phi" }
-    ] },
-  { name: "06_AQUÍ LA TIERRA XL (2022)", color: "var(--c-green)", entry: "j6",
-    children: [{ label: "EDITOR EN SALA", entry: "j6" }] },
-  { name: "07_AHORA O NUNCA (2023-2024)", color: "var(--c-orange)", entry: "j7",
-    children: [{ label: "EDITOR EN SALA", entry: "j7" }] },
-  { name: "08_LO SABE NO LO SABE (2024-ACTUALMENTE)", color: "var(--c-darkred)", entry: "j8",
-    children: [{ label: "EDITOR EN SALA", entry: "j8" }] }
-];
+/* textos generales */
+document.title = CONFIG.tituloProyecto + " " + CONFIG.subtituloProyecto;
+document.getElementById("projTitle").textContent = CONFIG.tituloProyecto;
+document.getElementById("projSub").textContent = CONFIG.subtituloProyecto;
+document.getElementById("userName").textContent = CONFIG.nombreUsuario;
+document.getElementById("origenTitle").textContent = CONFIG.tituloOrigen;
+document.getElementById("media").src = CONFIG.fotoMonitor;
 
-/* timeline clips: start/width in % */
-const CLIPS = [
-  { entry: "j1",  track: "v1", start: 0,  width: 16, bg: "var(--c-blue)",    logo: "assets/tutiempo.png" },
-  { entry: "j2",  track: "v1", start: 16, width: 6,  bg: "var(--c-yellow)",  logo: "assets/vav.png" },
-  { entry: "j3",  track: "v1", start: 22, width: 20, bg: "var(--c-red)",     logo: "assets/holatv.png" },
-  { entry: "j4",  track: "v2", start: 32, width: 9,  bg: "var(--c-gray)",    logo: "assets/telemadrid.png" },
-  { entry: "free",track: "v1", start: 42, width: 20, bg: "var(--c-magenta)", logo: "assets/yo.png" },
-  { entry: "bab", track: "v2", start: 43, width: 3.6, bg: "#a625a0", logo: "assets/bab.png" },
-  { entry: "tur", track: "v2", start: 47, width: 3.6, bg: "#a625a0", logo: "assets/turespana.png" },
-  { entry: "ene", track: "v2", start: 51, width: 3.6, bg: "#a625a0", logo: null, label: "ENERVIT" },
-  { entry: "nat", track: "v2", start: 55, width: 3.6, bg: "#a625a0", logo: "assets/naturgy.png" },
-  { entry: "phi", track: "v2", start: 59, width: 3.6, bg: "#a625a0", logo: "assets/philips.png" },
-  { entry: "j6",  track: "v1", start: 62, width: 8,  bg: "var(--c-green)",   logo: "assets/alt.png" },
-  { entry: "j7",  track: "v1", start: 70, width: 16, bg: "var(--c-orange)",  logo: "assets/aon.png" },
-  { entry: "j8",  track: "v1", start: 86, width: 14, bg: "var(--c-darkred)", logo: "assets/lsnls.png" }
-];
+const telDigits = CONFIG.telefono.replace(/[^\d+]/g, "");
+const telHref = "tel:" + (telDigits.startsWith("+") ? telDigits : "+34" + telDigits);
+const telLink = document.getElementById("telLink");
+telLink.href = telHref; telLink.textContent = CONFIG.telefono;
+const mailLink = document.getElementById("mailLink");
+mailLink.href = "mailto:" + CONFIG.email; mailLink.textContent = CONFIG.email;
+
+document.getElementById("aboutRows").innerHTML = CONFIG.sobreMi.map((txt, i) =>
+  `<div class="about-row"><span class="vtag">TXT_${String(i + 1).padStart(2, "0")}</span><div class="txt">${txt}</div></div>`).join("");
+
+/* colores de interfaz */
+const AP = CONFIG.apariencia || {};
+const rootStyle = document.documentElement.style;
+if (AP.colorAcento) rootStyle.setProperty("--accent", AP.colorAcento);
+if (AP.colorPaneles) rootStyle.setProperty("--panel", AP.colorPaneles);
+if (AP.colorFondo) rootStyle.setProperty("--panel-dark", AP.colorFondo);
 
 /* ================= BUILD PROJECT PANEL ================= */
 const binList = document.getElementById("binList");
@@ -1013,7 +880,7 @@ CLIPS.forEach(c => {
     clip.textContent = c.label || (e ? e.title : "");
   }
   const tipData = c.entry === "free"
-    ? { title: "FREELANCE", dates: "2020 - 2021", role: "Editor freelance · AfterShare (5 clientes)" }
+    ? { title: FREE_GROUP.titulo, dates: FREE_GROUP.fechas, role: FREE_GROUP.puesto }
     : { title: e.title, dates: e.dates, role: e.role };
   clip.addEventListener("click", () => openModal(c.entry));
   clip.addEventListener("mousemove", ev => showTooltip(ev, tipData));
@@ -1042,7 +909,7 @@ const modalBody = document.getElementById("modalBody");
 let exportTimer = null;
 
 function estadoHTML(estado) {
-  return estado === "wip" ? "🔧 Work in Progress" : "✔ Renderizado";
+  return (/render/i.test(estado) ? "✔ " : "🔧 ") + estado;
 }
 
 function openModal(id) {
@@ -1071,23 +938,24 @@ function openModal(id) {
 }
 
 function openFreelance() {
+  const g = FREE_GROUP;
   modalTitle.textContent = "Trabajo desarrollado";
   modalBody.innerHTML = `
-    <div class="colorbar" style="background:var(--c-magenta); --glow:#e23bd0"></div>
+    <div class="colorbar" style="background:${g.color}; --glow:${g.color}"></div>
     <div class="modal-head">
       <div class="head-txt">
-        <h3>FREELANCE</h3>
-        <div class="sub">Editor en remoto / presencial · AfterShare</div>
-        <div class="dates">📅 2020 - 2021</div>
+        <h3>${g.titulo}</h3>
+        <div class="sub">${g.puesto}</div>
+        <div class="dates">📅 ${g.fechas}</div>
       </div>
-      <img class="head-logo" src="assets/yo.png" alt="" style="max-height:74px">
+      ${g.logo ? `<img class="head-logo" src="${g.logo}" alt="" style="max-height:74px">` : ""}
     </div>
-    <p class="desc">Cinco clientes, cinco formas de contar. Pincha en cada uno para ver el trabajo desarrollado:</p>
+    <p class="desc">${g.descripcion}</p>
     <div class="brand-list">
       ${FREELANCE_BRANDS.map(k => {
         const b = ENTRIES[k];
         return `<div class="brand-row" onclick="openModal('${k}')">
-          ${b.logo ? `<img src="${b.logo}" alt="">` : `<span class="noimg">ENERVIT</span>`}
+          ${b.logo ? `<img src="${b.logo}" alt="">` : `<span class="noimg">${b.title}</span>`}
           <div><div class="b-name">${b.title}</div><div class="b-role">${b.role} · ${b.medio}</div></div>
           <span class="go">▶</span>
         </div>`;
@@ -1102,14 +970,14 @@ function openExport() {
   modalBody.innerHTML = `
     <div class="export-body">
       <div class="enc-label">CODIFICACIÓN</div>
-      <div class="enc-name">Bruno Baeza Vaqueiro</div>
+      <div class="enc-name">${CONFIG.nombreCompleto}</div>
       <div class="progress"><i id="expBar"></i></div>
       <div class="pct" id="expPct">0 % — codificando…</div>
       <div class="export-msg" id="expMsg">
-        <p>Si quieres saber más solo tienes que llamarme al
-          <a href="tel:+34626736182">626 73 61 82</a> o enviarme un correo a
-          <a href="mailto:bruno.baezavaqueiro@gmail.com">bruno.baezavaqueiro@gmail.com</a></p>
-        <p class="thanks">Muchísimas gracias por su atención.</p>
+        <p>${CONFIG.mensajeExportar
+          .replace(/TELEFONO/g, `<a href="${telHref}">${CONFIG.telefono}</a>`)
+          .replace(/EMAIL/g, `<a href="mailto:${CONFIG.email}">${CONFIG.email}</a>`)}</p>
+        <p class="thanks">${CONFIG.graciasExportar}</p>
       </div>
     </div>`;
   overlay.classList.add("show");
@@ -1136,7 +1004,7 @@ document.addEventListener("keydown", e => {
 
 /* ================= PLAYBACK ================= */
 const FPS = 25;
-let virtualDuration = 200;          // seconds (3m20s) while there is no video
+let virtualDuration = CONFIG.duracionSimulada || 200;
 let video = null;                   // filled if showreel.mp4 exists
 let playing = false, pos = 0, rafId = null, lastT = null;
 
@@ -1148,10 +1016,11 @@ const playBtn = document.getElementById("playBtn");
 
 function duration() { return video ? video.duration : virtualDuration; }
 
-/* try to load a real video: drop a "showreel.mp4" next to cv.html and it takes over */
+/* if the video file from config.js exists next to cv.html, it takes over */
 (function tryVideo() {
+  if (!CONFIG.archivoVideo) return;
   const v = document.createElement("video");
-  v.src = "showreel.mp4";
+  v.src = CONFIG.archivoVideo;
   v.preload = "metadata";
   v.playsInline = true;
   v.className = "media";

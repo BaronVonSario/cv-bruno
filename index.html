@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV_BrunoBaezaVaqueiro - Editado</title>
+<style>
+  :root {
+    --bg: #1b1b1b;
+    --panel: #232323;
+    --panel-2: #2a2a2a;
+    --panel-dark: #161616;
+    --line: #3a3a3a;
+    --text: #d8d8d8;
+    --text-dim: #8a8a8a;
+    --accent: #2d8ceb;
+    --c-blue: #2d8ceb;
+    --c-yellow: #e8d117;
+    --c-red: #d92b2b;
+    --c-gray: #b5b5b5;
+    --c-magenta: #e23bd0;
+    --c-green: #27b833;
+    --c-orange: #f07818;
+    --c-darkred: #b01515;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: #000;
+    color: var(--text);
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .app {
+    display: grid;
+    grid-template-rows: 34px 1fr 250px;
+    height: 100vh;
+    gap: 3px;
+    background: #000;
+  }
+
+  /* ============ TOP BAR ============ */
+  .topbar {
+    background: var(--panel-dark);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 14px;
+  }
+  .topbar .logo { color: #fff; font-weight: 700; font-size: 15px; }
+  .topbar .menu { display: flex; gap: 4px; }
+  .topbar .menu span {
+    padding: 4px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    color: var(--text-dim);
+    transition: background .15s, color .15s;
+  }
+  .topbar .menu span:hover { background: var(--panel-2); color: #fff; }
+  .topbar .menu span.active { color: #fff; border-bottom: 2px solid var(--accent); border-radius: 0; }
+  .topbar .title {
+    flex: 1;
+    text-align: center;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .3px;
+  }
+  .topbar .title em { font-style: normal; color: var(--text-dim); font-weight: 400; }
+  .topbar .right { display: flex; align-items: center; gap: 10px; color: var(--text-dim); font-size: 11px; }
+  .topbar .avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: url("assets/yo.png") center/cover no-repeat, linear-gradient(135deg, var(--accent), #7b4fe0);
+    cursor: pointer;
+  }
+
+  /* ============ MAIN 3 PANELS ============ */
+  .main {
+    display: grid;
+    grid-template-columns: 30% 1fr 32%;
+    gap: 3px;
+    min-height: 0;
+  }
+  .panel {
+    background: var(--panel);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--panel-dark);
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .panel-header h2 { font-size: 15px; color: #fff; font-weight: 700; letter-spacing: .5px; }
+  .panel-header .dimlabel { color: var(--text-dim); font-weight: 400; font-size: 12px; margin-right: 6px; }
+  .hamburger { color: var(--text-dim); cursor: pointer; font-size: 16px; letter-spacing: 1px; }
+  .hamburger:hover { color: #fff; }
+
+  /* ---- Project panel (left) ---- */
+  .searchrow {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .searchrow input {
+    flex: 1;
+    background: var(--panel-dark);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    color: var(--text);
+    padding: 4px 8px 4px 26px;
+    font-size: 12px;
+    outline: none;
+    width: 100%;
+  }
+  .searchrow input:focus { border-color: var(--accent); }
+  .searchrow .search-wrap { position: relative; flex: 1; display: flex; }
+  .searchrow .search-wrap::before {
+    content: "🔍";
+    position: absolute; left: 7px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px; opacity: .5;
+  }
+  .searchrow .count { color: var(--text-dim); font-size: 11px; white-space: nowrap; }
+
+  .bin-list { overflow-y: auto; flex: 1; padding: 4px 0; }
+  .bin { border-bottom: 1px solid rgba(255,255,255,.03); }
+  .bin-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background .12s;
+  }
+  .bin-row:hover { background: var(--panel-2); }
+  .bin-row.selected { background: #103a5e; }
+  .bin-row .chip { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .bin-row .tri {
+    width: 0; height: 0;
+    border-left: 5px solid var(--text-dim);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    transition: transform .18s;
+    flex-shrink: 0;
+  }
+  .bin.open .bin-row .tri { transform: rotate(90deg); }
+  .bin-row .folder { font-size: 12px; }
+  .bin-row .name { font-weight: 600; color: #eee; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bin-children {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .25s ease;
+  }
+  .bin.open .bin-children { max-height: 300px; }
+  .bin-child {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 10px 5px 38px;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 12px;
+    transition: background .12s, color .12s;
+  }
+  .bin-child:hover { background: var(--panel-2); color: #fff; }
+  .bin-child::before { content: "›"; opacity: .5; }
+  .bin.hidden-by-search { display: none; }
+
+  .panel-footer {
+    display: flex; align-items: center; gap: 14px;
+    padding: 6px 12px;
+    border-top: 1px solid var(--line);
+    color: var(--text-dim);
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  /* ---- Monitor (center) ---- */
+  .monitor { background: var(--panel-dark); }
+  .monitor .panel-header h2 { font-size: 13px; }
+  .monitor-screen-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    min-height: 0;
+  }
+  .monitor-screen {
+    width: 100%;
+    max-width: 660px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border: 1px solid #000;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .monitor-screen .media {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .25s ease, filter .25s ease;
+    pointer-events: none;
+  }
+  .monitor-screen .rec {
+    position: absolute; top: 8px; left: 10px;
+    display: none;
+    align-items: center; gap: 6px;
+    color: #fff; font-size: 11px; font-weight: 700;
+    text-shadow: 0 0 4px #000;
+    z-index: 2;
+  }
+  .monitor-screen.playing .rec { display: flex; }
+  .monitor-screen .rec::before {
+    content: "";
+    width: 9px; height: 9px; border-radius: 50%;
+    background: #f33;
+    animation: blink 1s infinite;
+  }
+  @keyframes blink { 50% { opacity: .2; } }
+  .monitor-screen .hint {
+    position: absolute; bottom: 8px; right: 10px;
+    background: rgba(0,0,0,.6);
+    padding: 3px 8px; border-radius: 3px;
+    font-size: 10px; color: #ccc;
+    opacity: 0; transition: opacity .2s;
+    z-index: 2;
+  }
+  .monitor-screen:hover .hint { opacity: 1; }
+
+  .transport { padding: 4px 16px 10px; flex-shrink: 0; }
+  .transport .tc-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .tc { font-family: "Consolas", "Courier New", monospace; font-size: 14px; }
+  .tc.in { color: var(--accent); }
+  .tc.current { color: #fff; }
+  .fit-select {
+    background: var(--panel-2); color: var(--text);
+    border: 1px solid var(--line); border-radius: 3px;
+    font-size: 11px; padding: 2px 6px;
+    cursor: pointer;
+  }
+  .scrubber {
+    height: 14px;
+    background: repeating-linear-gradient(90deg, #444 0 1px, transparent 1px 12px);
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+    margin-bottom: 8px;
+  }
+  .scrubber .thumb {
+    position: absolute; top: -2px;
+    width: 8px; height: 18px;
+    background: var(--accent);
+    border-radius: 2px;
+    left: 0%;
+    transform: translateX(-50%);
+  }
+  .buttons { display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .tbtn {
+    background: none; border: none; color: var(--text);
+    font-size: 15px; cursor: pointer; padding: 4px 8px; border-radius: 3px;
+    transition: background .15s, color .15s;
+  }
+  .tbtn:hover:not(:disabled) { background: var(--panel-2); color: #fff; }
+  .tbtn.play { font-size: 18px; }
+  .tbtn:disabled { opacity: .28; cursor: default; }
+
+  /* ---- Right column: Metadatos + Sobre mí ---- */
+  .right-col {
+    display: flex; flex-direction: column;
+    gap: 3px;
+    min-height: 0;
+  }
+  .right-col .panel { background: var(--panel-dark); }
+  .meta-search { padding: 8px 12px; flex-shrink: 0; }
+  .meta-search input {
+    width: 100%;
+    background: #fff; color: #222;
+    border: none; border-radius: 3px;
+    padding: 6px 10px; font-size: 12px;
+    outline: none;
+  }
+  .contact { padding: 4px 16px 14px; }
+  .contact h3 {
+    color: #fff; font-size: 16px; letter-spacing: 2px; font-weight: 800;
+    padding: 8px 0 6px;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .contact h3 .chev {
+    color: var(--text-dim); font-weight: 400; font-size: 15px;
+    display: inline-block;
+    transition: transform .2s;
+    transform: rotate(90deg);
+  }
+  .contact.collapsed h3 .chev { transform: rotate(0deg); }
+  .contact .contact-body {
+    overflow: hidden;
+    max-height: 80px;
+    transition: max-height .25s ease, opacity .25s;
+    opacity: 1;
+  }
+  .contact.collapsed .contact-body { max-height: 0; opacity: 0; }
+  .contact p { margin: 3px 0 3px 26px; font-size: 13.5px; }
+  .contact .label { color: var(--text-dim); }
+  .contact a { color: #fff; font-weight: 700; text-decoration: none; border-bottom: 1px dotted transparent; }
+  .contact a:hover { border-bottom-color: var(--accent); color: var(--accent); }
+
+  .about { flex: 1; overflow-y: auto; padding: 8px 14px 12px; }
+  .about-row {
+    display: grid;
+    grid-template-columns: 58px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 8px;
+    border-radius: 4px;
+    border-left: 3px solid transparent;
+    cursor: default;
+    transition: background .15s, border-color .15s, transform .15s;
+  }
+  .about-row:hover {
+    background: var(--panel-2);
+    border-left-color: var(--accent);
+    transform: translateX(3px);
+  }
+  .about-row .vtag { color: var(--text-dim); font-weight: 700; font-family: "Consolas", monospace; font-size: 12px; }
+  .about-row:hover .vtag { color: var(--accent); }
+  .about-row .txt { font-size: 12.5px; line-height: 1.45; color: #eee; font-weight: 600; }
+
+  .meters {
+    display: flex; flex-direction: column; gap: 3px;
+    padding: 8px 16px 12px;
+    border-top: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .meter { height: 8px; background: #0c0c0c; border-radius: 1px; overflow: hidden; }
+  .meter i {
+    display: block; height: 100%;
+    background: linear-gradient(90deg, #1a8f1a 70%, #c9d419 88%, #d43a19);
+    width: 0%;
+    transition: width .12s linear;
+  }
+
+  /* ============ TIMELINE ============ */
+  .timeline {
+    background: var(--panel-dark);
+    display: grid;
+    grid-template-rows: 26px 22px 1fr;
+    min-height: 0;
+    position: relative;
+  }
+  .tl-toolbar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--line);
+    font-size: 11px; color: var(--text-dim);
+  }
+  .tl-toolbar .tab {
+    color: #fff; background: var(--panel-2);
+    padding: 3px 10px; border-radius: 3px 3px 0 0;
+    font-weight: 600;
+  }
+  .tl-toolbar .tc { color: var(--accent); font-size: 12px; }
+  .ruler {
+    position: relative;
+    background: repeating-linear-gradient(90deg, #555 0 1px, transparent 1px 10%);
+    border-bottom: 1px solid var(--line);
+    margin-left: 90px;
+    font-family: "Consolas", monospace;
+    font-size: 9px; color: var(--text-dim);
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .ruler span { position: absolute; top: 4px; transform: translateX(3px); pointer-events: none; }
+
+  .tracks-wrap { display: flex; min-height: 0; position: relative; }
+  .track-heads {
+    width: 90px; flex-shrink: 0;
+    display: flex; flex-direction: column;
+    border-right: 1px solid var(--line);
+  }
+  .track-head {
+    display: flex; align-items: center; gap: 6px;
+    padding: 0 8px;
+    color: var(--text-dim); font-size: 10px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .track-head b { color: var(--text); font-size: 11px; }
+  .track-head .dot { width: 7px; height: 7px; border-radius: 50%; background: #444; cursor: pointer; }
+  .track-head .dot.on { background: var(--accent); }
+  .track-head.h-v2 { flex: 1; }
+  .track-head.h-v1 { flex: 1.8; }
+
+  .tracks {
+    flex: 1;
+    display: flex; flex-direction: column;
+    position: relative;
+    min-width: 0;
+  }
+  .track {
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .track.v2 { flex: 1; }
+  .track.v1 { flex: 1.8; }
+
+  .clip {
+    position: absolute; top: 4px; bottom: 4px;
+    border-radius: 2px;
+    border: 1px solid rgba(0,0,0,.5);
+    display: flex; align-items: center; justify-content: center;
+    padding: 4px 6px;
+    font-size: 10px; font-weight: 700;
+    color: #101010;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: filter .15s, transform .1s, box-shadow .15s;
+    box-shadow: inset 0 10px 0 rgba(255,255,255,.12);
+  }
+  .clip:hover {
+    filter: brightness(1.18);
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 1px #fff, 0 3px 10px rgba(0,0,0,.6);
+    z-index: 5;
+  }
+  .clip.light-text { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+  .clip img.cliplogo {
+    max-width: 92%;
+    max-height: 82%;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,.45));
+  }
+
+  .playhead {
+    position: absolute; top: 0; bottom: 0;
+    width: 1px;
+    background: var(--accent);
+    left: 0%;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .playhead::before {
+    content: "";
+    position: absolute; top: 0; left: -6px;
+    border: 6px solid transparent;
+    border-top: 8px solid var(--accent);
+  }
+
+  /* tooltip */
+  .tooltip {
+    position: fixed;
+    background: #0d0d0d;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 11px;
+    pointer-events: none;
+    z-index: 200;
+    opacity: 0;
+    transition: opacity .12s;
+    max-width: 280px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.7);
+  }
+  .tooltip.show { opacity: 1; }
+  .tooltip b { color: #fff; display: block; margin-bottom: 2px; }
+  .tooltip .dates { color: var(--accent); }
+  .tooltip .role { color: var(--text-dim); }
+
+  /* ============ MODAL ============ */
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.65);
+    backdrop-filter: blur(2px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+  }
+  .overlay.show { opacity: 1; pointer-events: auto; }
+  .modal {
+    width: min(580px, 92vw);
+    max-height: 88vh;
+    background: var(--panel);
+    border: 1px solid #4a4a4a;
+    border-radius: 6px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.8);
+    transform: translateY(14px) scale(.97);
+    transition: transform .2s;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .overlay.show .modal { transform: none; }
+  .modal-titlebar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--panel-dark);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .modal-titlebar .t { font-size: 12px; color: var(--text-dim); }
+  .modal-titlebar .close {
+    background: none; border: none; color: var(--text-dim);
+    font-size: 16px; cursor: pointer; line-height: 1; padding: 2px 6px; border-radius: 3px;
+  }
+  .modal-titlebar .close:hover { background: #c0392b; color: #fff; }
+  .modal-body { padding: 18px 22px 22px; overflow-y: auto; }
+  .modal-body .colorbar {
+    height: 8px; border-radius: 4px; margin-bottom: 16px;
+    box-shadow: 0 0 14px 0 var(--glow, transparent);
+  }
+  .modal-head { display: flex; align-items: flex-start; gap: 16px; }
+  .modal-head .head-txt { flex: 1; min-width: 0; }
+  .modal-head .head-logo {
+    max-width: 130px; max-height: 64px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.5));
+  }
+  .modal-body h3 { color: #fff; font-size: 18px; margin-bottom: 2px; }
+  .modal-body .sub { color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+  .modal-body .dates { color: var(--text-dim); font-size: 12px; margin-bottom: 14px; }
+  .modal-body p.desc { line-height: 1.55; color: #ccc; margin: 4px 0 16px; user-select: text; }
+  .meta-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  .meta-table td { padding: 5px 8px; border-top: 1px solid var(--line); }
+  .meta-table td:first-child { color: var(--text-dim); width: 120px; }
+  .meta-table td:last-child { color: #eee; font-family: "Consolas", monospace; }
+  .modal-tags { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .modal-tags span {
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 3px 10px; font-size: 11px; color: #bbb;
+  }
+
+  /* freelance overview rows */
+  .brand-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .brand-row {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: border-color .15s, transform .12s, background .15s;
+  }
+  .brand-row:hover { border-color: var(--c-magenta); background: #303030; transform: translateX(4px); }
+  .brand-row img { width: 74px; height: 34px; object-fit: contain; flex-shrink: 0; }
+  .brand-row .noimg {
+    width: 74px; height: 34px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: #f60; font-size: 13px; letter-spacing: .5px;
+  }
+  .brand-row .b-name { color: #fff; font-weight: 700; font-size: 13px; }
+  .brand-row .b-role { color: var(--text-dim); font-size: 11px; }
+  .brand-row .go { margin-left: auto; color: var(--text-dim); }
+  .brand-row:hover .go { color: var(--c-magenta); }
+
+  /* export dialog */
+  .export-body { text-align: left; }
+  .export-body .enc-label { color: var(--text-dim); font-size: 11px; letter-spacing: 1px; margin-bottom: 4px; }
+  .export-body .enc-name { color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 16px; }
+  .progress {
+    height: 10px; background: #0d0d0d; border: 1px solid var(--line);
+    border-radius: 5px; overflow: hidden; margin-bottom: 8px;
+  }
+  .progress i {
+    display: block; height: 100%; width: 0%;
+    background: linear-gradient(90deg, #1c66b0, var(--accent));
+    transition: width .1s linear;
+  }
+  .export-body .pct { font-family: "Consolas", monospace; font-size: 11px; color: var(--text-dim); margin-bottom: 18px; }
+  .export-msg { opacity: 0; transition: opacity .5s; }
+  .export-msg.show { opacity: 1; }
+  .export-msg p { line-height: 1.6; color: #ddd; margin-bottom: 10px; user-select: text; }
+  .export-msg a { color: var(--accent); font-weight: 700; text-decoration: none; }
+  .export-msg a:hover { text-decoration: underline; }
+  .export-msg .thanks { color: #fff; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ================= TOP BAR ================= -->
+  <header class="topbar">
+    <span class="logo">▶︎</span>
+    <nav class="menu">
+      <span class="active">Editar</span>
+      <span onclick="openExport()">Exportar</span>
+    </nav>
+    <div class="title">CV_BrunoBaezaVaqueiro <em>- Editado</em></div>
+    <div class="right">
+      <span>BRUNO</span>
+      <span>⌕</span><span>🔊</span><span>⛶</span>
+      <div class="avatar" title="Bruno Baeza Vaqueiro"></div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <div class="main">
+
+    <!-- VENTANA 01: experiencia laboral -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2>＼ EXPERIENCIA LABORAL</h2>
+        <span class="hamburger">≡</span>
+      </div>
+      <div class="searchrow">
+        <div class="search-wrap">
+          <input id="binSearch" type="text" placeholder="Buscar experiencia..." oninput="filterBins(this.value)">
+        </div>
+        <span class="count" id="binCount"></span>
+      </div>
+      <div class="bin-list" id="binList"><!-- built by JS --></div>
+      <div class="panel-footer">
+        <span>📁</span><span>▦</span><span>≣</span><span>―○―</span>
+        <span style="margin-left:auto">🗑</span>
+      </div>
+    </section>
+
+    <!-- VENTANA 02: monitor -->
+    <section class="panel monitor">
+      <div class="panel-header">
+        <h2><span class="dimlabel">Origen:</span> BRUNO BAEZA VAQUEIRO_EDITOR_AYUDANTE DE REALIZACIÓN</h2>
+        <span class="hamburger">≡</span>
+      </div>
+      <div class="monitor-screen-wrap">
+        <div class="monitor-screen" id="screen" onclick="togglePlay()" title="Clic para reproducir / pausar">
+          <img class="media" id="media" src="assets/foto.jpg" alt="Bruno Baeza Vaqueiro editando">
+          <span class="rec">REC</span>
+          <span class="hint">clic = play / pausa</span>
+        </div>
+      </div>
+      <div class="transport">
+        <div class="tc-row">
+          <span class="tc in">00:00:00:00</span>
+          <select class="fit-select" id="fitSel" onchange="applyFit()" onclick="event.stopPropagation()">
+            <option value="fit">Ajustar</option>
+            <option value="25">25%</option>
+            <option value="50">50%</option>
+            <option value="100">100%</option>
+          </select>
+          <select class="fit-select" id="qualSel" onchange="applyQuality()" onclick="event.stopPropagation()">
+            <option value="full">Completa</option>
+            <option value="half">1/2</option>
+            <option value="quarter">1/4</option>
+          </select>
+          <span class="tc current" id="tcCurrent">00:00:00:00</span>
+        </div>
+        <div class="scrubber" id="scrubber" onclick="seek(event)">
+          <div class="thumb" id="scrubThumb"></div>
+        </div>
+        <div class="buttons">
+          <button class="tbtn" onclick="jumpTo(0)" title="Ir al inicio">⏮</button>
+          <button class="tbtn" disabled title="Desactivado">◀▮</button>
+          <button class="tbtn play" id="playBtn" onclick="togglePlay()" title="Reproducir">▶</button>
+          <button class="tbtn" disabled title="Desactivado">▮▶</button>
+          <button class="tbtn" onclick="jumpTo(100)" title="Ir al final">⏭</button>
+          <button class="tbtn" disabled title="Desactivado">🚩</button>
+          <button class="tbtn" disabled title="Desactivado">📷</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VENTANA 03: metadatos + sobre mí -->
+    <div class="right-col">
+      <section class="panel" style="flex:0 0 auto">
+        <div class="panel-header">
+          <h2>Metadatos</h2>
+          <span class="hamburger">≡</span>
+        </div>
+        <div class="meta-search"><input type="text" placeholder="" aria-label="buscar metadatos"></div>
+        <div class="contact" id="contactBox">
+          <h3 onclick="document.getElementById('contactBox').classList.toggle('collapsed')">
+            <span class="chev">›</span>CONTACTO
+          </h3>
+          <div class="contact-body">
+            <p><span class="label">TELÉFONO:</span> <a href="tel:+34626736182" onclick="event.stopPropagation()">626 73 61 82</a></p>
+            <p><span class="label">MAIL:</span> <a href="mailto:bruno.baezavaqueiro@gmail.com" onclick="event.stopPropagation()">bruno.baezavaqueiro@gmail.com</a></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" style="flex:1">
+        <div class="panel-header">
+          <h2><span class="dimlabel">Texto:</span> SOBRE MÍ</h2>
+          <span class="hamburger">≡</span>
+        </div>
+        <div class="about">
+          <div class="about-row">
+            <span class="vtag">TXT_01</span>
+            <div class="txt">Amplia capacidad para trabajar en proyectos simultáneos y plazos cortos.</div>
+          </div>
+          <div class="about-row">
+            <span class="vtag">TXT_02</span>
+            <div class="txt">Creativo, con iniciativa y buena actitud de equipo.</div>
+          </div>
+          <div class="about-row">
+            <span class="vtag">TXT_03</span>
+            <div class="txt">Facilidad para integrarme en proyectos desde cero, sumando ideas para su desarrollo.</div>
+          </div>
+          <div class="about-row">
+            <span class="vtag">TXT_04</span>
+            <div class="txt">Más de soluciones que de problemas, más práctico que teórico, y tan empático como exigente.</div>
+          </div>
+        </div>
+        <div class="meters">
+          <div class="meter"><i id="m1"></i></div>
+          <div class="meter"><i id="m2"></i></div>
+          <div class="meter"><i id="m3"></i></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- VENTANA 04: timeline -->
+  <section class="timeline">
+    <div class="tl-toolbar">
+      <span class="tab">EXPERIENCIA LABORAL ≡</span>
+      <span class="tc" id="tcTimeline">00:00:00:00</span>
+      <span>✂ 🧲 ⇤ ⇥</span>
+      <span style="margin-left:auto">Pasa el ratón por los clips · clic para abrir la ficha</span>
+    </div>
+    <div class="ruler" id="ruler" onclick="seekRuler(event)"></div>
+    <div class="tracks-wrap">
+      <div class="track-heads">
+        <div class="track-head h-v2"><span class="dot on" onclick="this.classList.toggle('on')"></span><b>V2</b> fx</div>
+        <div class="track-head h-v1"><span class="dot on" onclick="this.classList.toggle('on')"></span><b>V1</b> 🔒</div>
+      </div>
+      <div class="tracks" id="tracks">
+        <div class="track v2" id="trackV2"></div>
+        <div class="track v1" id="trackV1"></div>
+        <div class="playhead" id="playhead"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- tooltip -->
+<div class="tooltip" id="tooltip"></div>
+
+<!-- modal -->
+<div class="overlay" id="overlay" onclick="if(event.target===this) closeModal()">
+  <div class="modal">
+    <div class="modal-titlebar">
+      <span class="t" id="modalTitle">Trabajo desarrollado</span>
+      <button class="close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const ENTRIES = {
+  j1: {
+    title: "TU TIEMPO con Roberto Brasero",
+    role: "Ayudante de Realización",
+    dates: "2011 - 2013",
+    color: "var(--c-blue)", glow: "#2d8ceb",
+    logo: "assets/tutiempo.png",
+    desc: "Edición de colas y piezas cortas, lanzamiento de VTR y mapas meteorológicos desde control, control de tiempos y creación de escaletas. Realización en exterior del reportaje “Es tiempo de… Setas”.",
+    medio: "Televisión. Actualidad",
+    prod: "Atresmedia",
+    estado: "render",
+    tags: ["ANTENA 3", "DIRECTO", "PLATÓ", "CONTROL", "FINAL CUT", "ESCALETAS"]
+  },
+  j2: {
+    title: "VIS A VIS",
+    role: "Becario en postproducción",
+    dates: "2016 - 2017",
+    color: "var(--c-yellow)", glow: "#e8d117",
+    logo: "assets/vav.png",
+    desc: "Volcado y mantenimiento de discos duros, envío de material, aprendizaje básico de otros departamentos, aprendizaje en ficción.",
+    medio: "Televisión. Ficción",
+    prod: "Globomedia",
+    estado: "render",
+    tags: ["FICCIÓN", "EXTERIORES", "PLATÓ"]
+  },
+  j3: {
+    title: "¡HOLA! TV",
+    role: "Editor en remoto",
+    dates: "2017 - 2019",
+    color: "var(--c-red)", glow: "#d92b2b",
+    logo: "assets/holatv.png",
+    desc: "Editor y ayudante de realización del departamento de Promociones del canal. Edición de piezas promocionales tanto para programas de actualidad como empaquetados. Visionado estratégico de contenidos para la posterior edición y realización. Creación de promos mensuales elaboradas mediante el uso de templates dinámicos. Contacto directo en remoto con todos los demás departamentos de Latinoamérica.",
+    medio: "Televisión. Actualidad / Corazón",
+    prod: "Palmerita Films",
+    estado: "render",
+    tags: ["PROMOS", "ADOBE PREMIERE", "AFTER EFFECTS", "CONTENIDO", "TELEVISIÓN", "REMOTO"]
+  },
+  j4: {
+    title: "DOCUMENTALES “LA NOCHE DEL REY” Y “MADRID NOS UNE”",
+    role: "Editor en remoto",
+    dates: "2018",
+    color: "var(--c-gray)", glow: "#b5b5b5",
+    logo: "assets/telemadrid.png",
+    desc: "Volcado y estructuración de proyectos para la fase de edición. Edición de promociones cortas con carácter publicitario.",
+    medio: "Televisión. Documental",
+    prod: "Palmerita Films en colaboración con KOMETA para Telemadrid",
+    estado: "render",
+    tags: ["DOCUS", "TV", "ESTRUCTURA"]
+  },
+  bab: {
+    title: "BEBÉ A BORDO",
+    role: "Editor en remoto/presencial",
+    dates: "2020 - 2021",
+    color: "var(--c-magenta)", glow: "#e23bd0",
+    logo: "assets/bab.png",
+    desc: "Edición de piezas para YouTube en estrecha colaboración con el equipo de redacción. Ajuste de las piezas para distintas duraciones. Creación de miniaturas para el canal de YouTube.",
+    medio: "Youtube. Entretenimiento",
+    prod: "Freelance. AfterShare",
+    estado: "render",
+    tags: ["YOUTUBE", "FAMILIAR", "PREMIERE", "PHOTOSHOP", "DURACIONES"]
+  },
+  tur: {
+    title: "CAMPAÑA TURESPAÑA 2021",
+    role: "Editor en remoto",
+    dates: "2020 - 2021",
+    color: "var(--c-magenta)", glow: "#e23bd0",
+    logo: "assets/turespana.png",
+    desc: "Creación de piezas a nivel interno de la empresa y congresos. Edición de material para promociones de la campaña. Inclusión de grafismos y subtítulos en distintos idiomas y formatos.",
+    medio: "Web. Congresos",
+    prod: "Freelance. AfterShare",
+    estado: "render",
+    tags: ["FINISH", "FORMATOS", "PREMIERE"]
+  },
+  ene: {
+    title: "ENERVIT",
+    role: "Editor en remoto",
+    dates: "2020 - 2021",
+    color: "var(--c-magenta)", glow: "#e23bd0",
+    logo: null,
+    desc: "Edición de stories y videos cortos con carácter divulgativo, enfocados a Facebook e Instagram.",
+    medio: "Publicidad. Instagram",
+    prod: "Freelance. AfterShare",
+    estado: "render",
+    tags: ["STORIES", "VIDEOS CORTOS", "INSTAGRAM", "FACEBOOK", "FORMATOS"]
+  },
+  nat: {
+    title: "NATURGY",
+    role: "Editor en remoto",
+    dates: "2020 - 2021",
+    color: "var(--c-magenta)", glow: "#e23bd0",
+    logo: "assets/naturgy.png",
+    desc: "Edición de videos a nivel interno y promocional, con la inclusión de doblajes en distintos idiomas.",
+    medio: "Empresa",
+    prod: "Freelance. AfterShare",
+    estado: "render",
+    tags: ["CORPORATIVO", "PREMIERE"]
+  },
+  phi: {
+    title: "PHILIPS SONICARE",
+    role: "Editor en sala",
+    dates: "2020 - 2021",
+    color: "var(--c-magenta)", glow: "#e23bd0",
+    logo: "assets/philips.png",
+    desc: "Montaje y adaptación de entrevistas junto al equipo de redacción para la creación de versiones en distintos formatos y duraciones para YouTube.",
+    medio: "Publicidad. Youtube",
+    prod: "Freelance. AfterShare",
+    estado: "render",
+    tags: ["PUBLICIDAD", "YOUTUBE", "PREMIERE", "REDACCIÓN", "FINISH"]
+  },
+  j6: {
+    title: "Aquí la Tierra XL",
+    role: "Editor en sala",
+    dates: "2022",
+    color: "var(--c-green)", glow: "#27b833",
+    logo: "assets/alt.png",
+    desc: "Edición, selección de recursos y acabado creativo de reportajes. Musicalización y sonorización específica en función del tipo de reportaje.",
+    medio: "Televisión. Actualidad",
+    prod: "Catorce Comunicación para TVE",
+    estado: "render",
+    tags: ["REPORTAJES", "TVE", "PREMIERE", "DIVULGATIVO"]
+  },
+  j7: {
+    title: "Ahora o Nunca",
+    role: "Editor en sala",
+    dates: "2023 - 2024",
+    color: "var(--c-orange)", glow: "#f07818",
+    logo: "assets/aon.png",
+    desc: "Edición de piezas tipo concurso, más rápidas, dinámicas y divertidas, acompañándolas con sfx para reforzar la pieza. Trabajo directo con el equipo creativo y de grafismo para enriquecer las piezas. Edición, selección de recursos y acabado creativo de reportajes. Musicalización y sonorización específica en función del tipo de reportaje.",
+    medio: "Televisión. Actualidad/Entretenimiento",
+    prod: "Catorce Comunicación para TVE",
+    estado: "render",
+    tags: ["REPORTAJES", "CONCURSO", "SFX", "GRAFISMOS", "TVE", "PREMIERE", "CREATIVO"]
+  },
+  j8: {
+    title: "Lo Sabe, No Lo Sabe",
+    role: "Editor en sala",
+    dates: "2024 - Actualidad",
+    color: "var(--c-darkred)", glow: "#b01515",
+    logo: "assets/lsnls.png",
+    desc: "Edición final de concursantes previamente precortados. Sonorización, mezcla de efectos de sonido y musicalización. Inserción de grafismos y trabajo colaborativo con el departamento gráfico en la generación y aplicación de propuestas creativas. Libertad creativa a la hora de editar programas especiales (Navidad, Halloween…). Creación de piezas promocionales para la cadena si el programa lo requiere.",
+    medio: "Televisión. Concurso",
+    prod: "Producciones Mandarina para Cuatro",
+    estado: "wip",
+    tags: ["CONCURSO", "CREATIVIDAD", "PREMIERE", "SFX", "GRAFISMOS"]
+  }
+};
+const FREELANCE_BRANDS = ["bab", "tur", "ene", "nat", "phi"];
+
+/* left panel bins */
+const BINS = [
+  { name: "01_TU TIEMPO CON ROBERTO BRASERO (2011-2013)", color: "var(--c-blue)", entry: "j1",
+    children: [{ label: "AYUDANTE DE REALIZACIÓN", entry: "j1" }] },
+  { name: "02_VIS A VIS (2016-2017)", color: "var(--c-yellow)", entry: "j2",
+    children: [{ label: "WIP_EN PRÁCTICAS", entry: "j2" }] },
+  { name: "03_¡HOLA!TV (2017-2019)", color: "var(--c-red)", entry: "j3",
+    children: [{ label: "EDITOR DEL DEPARTAMENTO DE PROMOS", entry: "j3" }] },
+  { name: '04_"LA NOCHE DEL REY" Y "MADRID NOS UNE" (2018)', color: "var(--c-gray)", entry: "j4",
+    children: [{ label: "AYUDANTE DE REALIZACIÓN", entry: "j4" }] },
+  { name: "05_FREELANCE (2020-2021)", color: "var(--c-magenta)", entry: "free",
+    children: [
+      { label: "BEBÉ A BORDO", entry: "bab" },
+      { label: "TURESPAÑA 2021", entry: "tur" },
+      { label: "ENERVIT", entry: "ene" },
+      { label: "NATURGY", entry: "nat" },
+      { label: "PHILIPS SONICARE", entry: "phi" }
+    ] },
+  { name: "06_AQUÍ LA TIERRA XL (2022)", color: "var(--c-green)", entry: "j6",
+    children: [{ label: "EDITOR EN SALA", entry: "j6" }] },
+  { name: "07_AHORA O NUNCA (2023-2024)", color: "var(--c-orange)", entry: "j7",
+    children: [{ label: "EDITOR EN SALA", entry: "j7" }] },
+  { name: "08_LO SABE NO LO SABE (2024-ACTUALMENTE)", color: "var(--c-darkred)", entry: "j8",
+    children: [{ label: "EDITOR EN SALA", entry: "j8" }] }
+];
+
+/* timeline clips: start/width in % */
+const CLIPS = [
+  { entry: "j1",  track: "v1", start: 0,  width: 16, bg: "var(--c-blue)",    logo: "assets/tutiempo.png" },
+  { entry: "j2",  track: "v1", start: 16, width: 6,  bg: "var(--c-yellow)",  logo: "assets/vav.png" },
+  { entry: "j3",  track: "v1", start: 22, width: 20, bg: "var(--c-red)",     logo: "assets/holatv.png" },
+  { entry: "j4",  track: "v2", start: 32, width: 9,  bg: "var(--c-gray)",    logo: "assets/telemadrid.png" },
+  { entry: "free",track: "v1", start: 42, width: 20, bg: "var(--c-magenta)", logo: "assets/yo.png" },
+  { entry: "bab", track: "v2", start: 43, width: 3.6, bg: "#a625a0", logo: "assets/bab.png" },
+  { entry: "tur", track: "v2", start: 47, width: 3.6, bg: "#a625a0", logo: "assets/turespana.png" },
+  { entry: "ene", track: "v2", start: 51, width: 3.6, bg: "#a625a0", logo: null, label: "ENERVIT" },
+  { entry: "nat", track: "v2", start: 55, width: 3.6, bg: "#a625a0", logo: "assets/naturgy.png" },
+  { entry: "phi", track: "v2", start: 59, width: 3.6, bg: "#a625a0", logo: "assets/philips.png" },
+  { entry: "j6",  track: "v1", start: 62, width: 8,  bg: "var(--c-green)",   logo: "assets/alt.png" },
+  { entry: "j7",  track: "v1", start: 70, width: 16, bg: "var(--c-orange)",  logo: "assets/aon.png" },
+  { entry: "j8",  track: "v1", start: 86, width: 14, bg: "var(--c-darkred)", logo: "assets/lsnls.png" }
+];
+
+/* ================= BUILD PROJECT PANEL ================= */
+const binList = document.getElementById("binList");
+BINS.forEach(b => {
+  const bin = document.createElement("div");
+  bin.className = "bin";
+  bin.dataset.search = (b.name + " " + b.children.map(c => c.label).join(" ")).toLowerCase();
+  bin.innerHTML = `
+    <div class="bin-row">
+      <span class="chip" style="background:${b.color}"></span>
+      <span class="tri"></span>
+      <span class="folder">📁</span>
+      <span class="name">${b.name}</span>
+    </div>
+    <div class="bin-children">
+      ${b.children.map(c => `<div class="bin-child" data-entry="${c.entry}">📁 ${c.label}</div>`).join("")}
+    </div>`;
+  bin.querySelector(".bin-row").addEventListener("click", () => {
+    bin.classList.toggle("open");
+    document.querySelectorAll(".bin-row.selected").forEach(r => r.classList.remove("selected"));
+    bin.querySelector(".bin-row").classList.add("selected");
+  });
+  bin.querySelector(".bin-row").addEventListener("dblclick", () => openModal(b.entry));
+  bin.querySelectorAll(".bin-child").forEach(ch => {
+    ch.addEventListener("click", e => { e.stopPropagation(); openModal(ch.dataset.entry); });
+  });
+  binList.appendChild(bin);
+});
+
+function filterBins(q) {
+  q = q.trim().toLowerCase();
+  let visible = 0;
+  document.querySelectorAll(".bin").forEach(bin => {
+    const match = !q || bin.dataset.search.includes(q);
+    bin.classList.toggle("hidden-by-search", !match);
+    if (match) visible += 1 + bin.querySelectorAll(".bin-child").length;
+    if (q && match) bin.classList.add("open");
+  });
+  document.getElementById("binCount").textContent = visible + " elementos";
+}
+filterBins("");
+
+/* ================= BUILD TIMELINE ================= */
+const trackV1 = document.getElementById("trackV1");
+const trackV2 = document.getElementById("trackV2");
+
+CLIPS.forEach(c => {
+  const e = c.entry === "free" ? null : ENTRIES[c.entry];
+  const clip = document.createElement("div");
+  clip.className = "clip" + (c.logo ? "" : " light-text");
+  clip.style.left = c.start + "%";
+  clip.style.width = c.width + "%";
+  clip.style.background = c.bg;
+  if (c.logo) {
+    clip.innerHTML = `<img class="cliplogo" src="${c.logo}" alt="">`;
+  } else {
+    clip.textContent = c.label || (e ? e.title : "");
+  }
+  const tipData = c.entry === "free"
+    ? { title: "FREELANCE", dates: "2020 - 2021", role: "Editor freelance · AfterShare (5 clientes)" }
+    : { title: e.title, dates: e.dates, role: e.role };
+  clip.addEventListener("click", () => openModal(c.entry));
+  clip.addEventListener("mousemove", ev => showTooltip(ev, tipData));
+  clip.addEventListener("mouseleave", hideTooltip);
+  (c.track === "v2" ? trackV2 : trackV1).appendChild(clip);
+});
+
+/* ================= TOOLTIP ================= */
+const tooltip = document.getElementById("tooltip");
+function showTooltip(e, d) {
+  tooltip.innerHTML = `<b>${d.title}</b><span class="dates">${d.dates}</span><br><span class="role">${d.role}</span><br><span class="role" style="font-size:10px">▶ clic para abrir la ficha completa</span>`;
+  tooltip.classList.add("show");
+  const pad = 14;
+  let x = e.clientX + pad, y = e.clientY - tooltip.offsetHeight - pad;
+  if (x + tooltip.offsetWidth > innerWidth) x = e.clientX - tooltip.offsetWidth - pad;
+  if (y < 0) y = e.clientY + pad;
+  tooltip.style.left = x + "px";
+  tooltip.style.top = y + "px";
+}
+function hideTooltip() { tooltip.classList.remove("show"); }
+
+/* ================= MODALS ================= */
+const overlay = document.getElementById("overlay");
+const modalTitle = document.getElementById("modalTitle");
+const modalBody = document.getElementById("modalBody");
+let exportTimer = null;
+
+function estadoHTML(estado) {
+  return estado === "wip" ? "🔧 Work in Progress" : "✔ Renderizado";
+}
+
+function openModal(id) {
+  clearInterval(exportTimer);
+  if (id === "free") return openFreelance();
+  const e = ENTRIES[id];
+  modalTitle.textContent = "Trabajo desarrollado";
+  modalBody.innerHTML = `
+    <div class="colorbar" style="background:${e.color}; --glow:${e.glow}"></div>
+    <div class="modal-head">
+      <div class="head-txt">
+        <h3>${e.title}</h3>
+        <div class="sub">${e.role}</div>
+        <div class="dates">📅 ${e.dates}</div>
+      </div>
+      ${e.logo ? `<img class="head-logo" src="${e.logo}" alt="">` : ""}
+    </div>
+    <p class="desc">“${e.desc}”</p>
+    <table class="meta-table">
+      <tr><td>Tipo de medio</td><td>${e.medio}</td></tr>
+      <tr><td>Productora</td><td>${e.prod}</td></tr>
+      <tr><td>Estado</td><td>${estadoHTML(e.estado)}</td></tr>
+    </table>
+    <div class="modal-tags">${e.tags.map(t => `<span>${t}</span>`).join("")}</div>`;
+  overlay.classList.add("show");
+}
+
+function openFreelance() {
+  modalTitle.textContent = "Trabajo desarrollado";
+  modalBody.innerHTML = `
+    <div class="colorbar" style="background:var(--c-magenta); --glow:#e23bd0"></div>
+    <div class="modal-head">
+      <div class="head-txt">
+        <h3>FREELANCE</h3>
+        <div class="sub">Editor en remoto / presencial · AfterShare</div>
+        <div class="dates">📅 2020 - 2021</div>
+      </div>
+      <img class="head-logo" src="assets/yo.png" alt="" style="max-height:74px">
+    </div>
+    <p class="desc">Cinco clientes, cinco formas de contar. Pincha en cada uno para ver el trabajo desarrollado:</p>
+    <div class="brand-list">
+      ${FREELANCE_BRANDS.map(k => {
+        const b = ENTRIES[k];
+        return `<div class="brand-row" onclick="openModal('${k}')">
+          ${b.logo ? `<img src="${b.logo}" alt="">` : `<span class="noimg">ENERVIT</span>`}
+          <div><div class="b-name">${b.title}</div><div class="b-role">${b.role} · ${b.medio}</div></div>
+          <span class="go">▶</span>
+        </div>`;
+      }).join("")}
+    </div>`;
+  overlay.classList.add("show");
+}
+
+function openExport() {
+  clearInterval(exportTimer);
+  modalTitle.textContent = "Exportación";
+  modalBody.innerHTML = `
+    <div class="export-body">
+      <div class="enc-label">CODIFICACIÓN</div>
+      <div class="enc-name">Bruno Baeza Vaqueiro</div>
+      <div class="progress"><i id="expBar"></i></div>
+      <div class="pct" id="expPct">0 % — codificando…</div>
+      <div class="export-msg" id="expMsg">
+        <p>Si quieres saber más solo tienes que llamarme al
+          <a href="tel:+34626736182">626 73 61 82</a> o enviarme un correo a
+          <a href="mailto:bruno.baezavaqueiro@gmail.com">bruno.baezavaqueiro@gmail.com</a></p>
+        <p class="thanks">Muchísimas gracias por su atención.</p>
+      </div>
+    </div>`;
+  overlay.classList.add("show");
+  let p = 0;
+  exportTimer = setInterval(() => {
+    p = Math.min(100, p + 1 + Math.random() * 4);
+    document.getElementById("expBar").style.width = p + "%";
+    document.getElementById("expPct").textContent = Math.floor(p) + (p < 100 ? " % — codificando…" : " % — exportación completada ✔");
+    if (p >= 100) {
+      clearInterval(exportTimer);
+      document.getElementById("expMsg").classList.add("show");
+    }
+  }, 40);
+}
+
+function closeModal() {
+  clearInterval(exportTimer);
+  overlay.classList.remove("show");
+}
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeModal();
+  if (e.key === " " && !e.target.matches("input, select")) { e.preventDefault(); togglePlay(); }
+});
+
+/* ================= PLAYBACK ================= */
+const FPS = 25;
+let virtualDuration = 200;          // seconds (3m20s) while there is no video
+let video = null;                   // filled if showreel.mp4 exists
+let playing = false, pos = 0, rafId = null, lastT = null;
+
+const playhead = document.getElementById("playhead");
+const scrubThumb = document.getElementById("scrubThumb");
+const screen = document.getElementById("screen");
+const media = document.getElementById("media");
+const playBtn = document.getElementById("playBtn");
+
+function duration() { return video ? video.duration : virtualDuration; }
+
+/* try to load a real video: drop a "showreel.mp4" next to cv.html and it takes over */
+(function tryVideo() {
+  const v = document.createElement("video");
+  v.src = "showreel.mp4";
+  v.preload = "metadata";
+  v.playsInline = true;
+  v.className = "media";
+  v.addEventListener("loadedmetadata", () => {
+    video = v;
+    media.replaceWith(v);
+    v.id = "media";
+    v.addEventListener("ended", () => { if (playing) togglePlay(); });
+    buildRuler();
+    render();
+  });
+})();
+
+function fmtTC(p) {
+  const totalF = Math.round(duration() * FPS);
+  const f = Math.min(totalF, Math.floor(totalF * p / 100));
+  const fr = f % FPS, sTot = Math.floor(f / FPS);
+  const s = sTot % 60, m = Math.floor(sTot / 60) % 60;
+  return `00:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}:${String(fr).padStart(2, "0")}`;
+}
+function render() {
+  playhead.style.left = pos + "%";
+  scrubThumb.style.left = pos + "%";
+  document.getElementById("tcCurrent").textContent = fmtTC(pos);
+  document.getElementById("tcTimeline").textContent = fmtTC(pos);
+}
+function tick(t) {
+  if (video) {
+    pos = video.duration ? video.currentTime / video.duration * 100 : 0;
+  } else {
+    if (lastT !== null) {
+      pos += (t - lastT) / 1000 / virtualDuration * 100;
+      if (pos >= 100) { pos = 100; togglePlay(); }
+    }
+    lastT = t;
+  }
+  render();
+  animateMeters();
+  if (playing) rafId = requestAnimationFrame(tick);
+}
+function togglePlay() {
+  playing = !playing;
+  playBtn.textContent = playing ? "⏸" : "▶";
+  playBtn.title = playing ? "Pausa" : "Reproducir";
+  screen.classList.toggle("playing", playing);
+  lastT = null;
+  if (video) { playing ? video.play() : video.pause(); }
+  if (playing) rafId = requestAnimationFrame(tick);
+  else { cancelAnimationFrame(rafId); resetMeters(); }
+}
+function setPos(p) {
+  pos = Math.min(100, Math.max(0, p));
+  if (video && video.duration) video.currentTime = video.duration * pos / 100;
+  render();
+}
+function seek(e) {
+  const r = document.getElementById("scrubber").getBoundingClientRect();
+  setPos((e.clientX - r.left) / r.width * 100);
+}
+function seekRuler(e) {
+  const r = document.getElementById("ruler").getBoundingClientRect();
+  setPos((e.clientX - r.left) / r.width * 100);
+}
+function jumpTo(p) { setPos(p); }
+
+/* ruler labels follow the real duration */
+function buildRuler() {
+  const ruler = document.getElementById("ruler");
+  ruler.querySelectorAll("span").forEach(s => s.remove());
+  for (let i = 0; i <= 9; i++) {
+    const sec = duration() * i / 10;
+    const s = Math.floor(sec) % 60, m = Math.floor(sec / 60) % 60;
+    const el = document.createElement("span");
+    el.style.left = (i * 10) + "%";
+    el.textContent = `00:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}:00`;
+    ruler.appendChild(el);
+  }
+}
+buildRuler();
+
+/* Ajustar = zoom · Completa = calidad */
+function applyFit() {
+  const v = document.getElementById("fitSel").value;
+  const scale = { fit: 1, "25": 0.25, "50": 0.5, "100": 2 }[v];
+  document.getElementById("media").style.transform = `scale(${scale})`;
+}
+function applyQuality() {
+  const v = document.getElementById("qualSel").value;
+  const filter = { full: "none", half: "blur(2px) saturate(.9)", quarter: "blur(4px) saturate(.75)" }[v];
+  document.getElementById("media").style.filter = filter;
+}
+
+/* audio meters */
+const meters = [document.getElementById("m1"), document.getElementById("m2"), document.getElementById("m3")];
+function animateMeters() {
+  meters.forEach((m, i) => {
+    m.style.width = (45 + Math.sin(performance.now() / (140 + i * 60)) * 25 + (pos % 7) * 3) + "%";
+  });
+}
+function resetMeters() { meters.forEach(m => m.style.width = "0%"); }
+
+render();
+</script>
+</body>
+</html>

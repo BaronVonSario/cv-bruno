@@ -77,6 +77,7 @@
     color: var(--text-dim); cursor: default;
   }
   .topbar .right .ico:hover { color: #fff; }
+  .topbar .right .ico.btn { cursor: pointer; }
   .topbar .right .ico svg { width: 14px; height: 14px; display: block; fill: currentColor; }
   .topbar .avatar {
     width: 22px; height: 22px; border-radius: 50%;
@@ -638,6 +639,64 @@
   .export-msg a { color: var(--accent); font-weight: 700; text-decoration: none; }
   .export-msg a:hover { text-decoration: underline; }
   .export-msg .thanks { color: #fff; font-weight: 600; }
+
+  /* ============ GUÍA RÁPIDA ============ */
+  .tour { position: fixed; inset: 0; z-index: 300; }
+  .tour[hidden] { display: none; }
+  .tour-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .tour-dim { fill: rgba(0, 0, 0, .74); }
+  .tour-ring {
+    fill: none; stroke: var(--accent); stroke-width: 2;
+    filter: drop-shadow(0 0 7px var(--accent));
+    animation: tourPulse 2s ease-in-out infinite;
+  }
+  @keyframes tourPulse { 50% { opacity: .5; } }
+  .tour-arrow {
+    fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round;
+    stroke-dasharray: var(--len); stroke-dashoffset: var(--len);
+    animation: tourDraw .55s .08s cubic-bezier(.4, 0, .2, 1) forwards;
+  }
+  @keyframes tourDraw { to { stroke-dashoffset: 0; } }
+  .tour-head { fill: var(--accent); stroke: none; opacity: 0; animation: tourFade .25s .5s ease forwards; }
+  @keyframes tourFade { to { opacity: 1; } }
+
+  .tour-card {
+    position: absolute;
+    width: min(330px, calc(100vw - 36px));
+    background: var(--panel);
+    border: 1px solid #4a4a4a;
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .75);
+    padding: 13px 16px 12px;
+    animation: tourIn .3s ease both;
+  }
+  @keyframes tourIn { from { opacity: 0; transform: translateY(9px); } }
+  .tour-card .tour-count {
+    color: var(--text-dim); font-family: "Consolas", monospace;
+    font-size: 10px; letter-spacing: 1.5px; margin-bottom: 7px;
+  }
+  .tour-card h4 { color: #fff; font-size: 14.5px; line-height: 1.3; margin-bottom: 7px; }
+  .tour-card p { color: #ccc; font-size: 12.5px; line-height: 1.5; user-select: text; }
+  .tour-actions { display: flex; align-items: center; gap: 10px; margin-top: 15px; }
+  .tour-actions .tour-skip {
+    margin-right: auto;
+    background: none; border: none; color: var(--text-dim);
+    font-size: 12px; cursor: pointer; padding: 6px 2px;
+  }
+  .tour-actions .tour-skip:hover { color: #fff; }
+  .tour-actions .tour-next {
+    background: var(--accent); border: none; color: #fff;
+    font-weight: 700; font-size: 12.5px;
+    padding: 8px 17px; border-radius: 4px; cursor: pointer;
+    transition: filter .15s;
+  }
+  .tour-actions .tour-next:hover { filter: brightness(1.14); }
+  @media (prefers-reduced-motion: reduce) {
+    .tour-card, .tour-ring, .tour-head, .tour-arrow { animation: none; }
+    .tour-arrow { stroke-dashoffset: 0; }
+    .tour-head { opacity: 1; }
+  }
 </style>
 </head>
 <body>
@@ -649,11 +708,12 @@
     <span class="logo">▶︎</span>
     <nav class="menu">
       <span class="active">Editar</span>
-      <span onclick="openExport()">Exportar</span>
+      <span id="menuExportar" onclick="openExport()">Exportar</span>
     </nav>
     <div class="title"><span id="projTitle"></span> <em id="projSub"></em></div>
     <div class="right">
       <span id="userName"></span>
+      <span class="ico btn" id="helpBtn" onclick="startTour()" title="Guía rápida"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1.2a6.8 6.8 0 1 0 0 13.6A6.8 6.8 0 0 0 8 1.2Zm0 1.7a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2Zm.05 1.6c-1.2 0-2.1.7-2.3 1.9l1.4.2c.08-.5.4-.8.9-.8.5 0 .8.3.8.7 0 .3-.15.5-.6.85-.7.5-1 .95-.95 1.75h1.4c0-.45.13-.65.6-1 .75-.55 1.05-1 1.05-1.7 0-1.1-.9-1.85-2.3-1.85ZM7.3 10.9v1.5h1.5v-1.5Z"/></svg></span>
       <span class="ico" title="Buscar"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M7 2a5 5 0 0 1 3.94 8.09l2.98 2.98-1.35 1.35-2.98-2.98A5 5 0 1 1 7 2Zm0 1.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4Z"/></svg></span>
       <span class="ico" title="Pantalla completa"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2h5v1.7H3.7V7H2V2Zm7 0h5v5h-1.7V3.7H9V2ZM2 9h1.7v3.3H7V14H2V9Zm10.3 0H14v5H9v-1.7h3.3V9Z"/></svg></span>
       <div class="avatar" title="Bruno Baeza Vaqueiro"></div>
@@ -821,6 +881,30 @@
 
 <!-- tooltip -->
 <div class="tooltip" id="tooltip"></div>
+
+<!-- guía rápida de bienvenida -->
+<div class="tour" id="tour" hidden>
+  <svg class="tour-svg" id="tourSvg" aria-hidden="true">
+    <defs>
+      <mask id="tourMask" maskUnits="userSpaceOnUse">
+        <rect id="tourMaskBg" x="0" y="0" fill="#fff"></rect>
+        <g id="tourHoles"></g>
+      </mask>
+    </defs>
+    <rect class="tour-dim" id="tourDim" x="0" y="0" mask="url(#tourMask)"></rect>
+    <g id="tourRings"></g>
+    <g id="tourArrows"></g>
+  </svg>
+  <div class="tour-card" id="tourCard" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+    <div class="tour-count" id="tourCount"></div>
+    <h4 id="tourTitle"></h4>
+    <p id="tourText"></p>
+    <div class="tour-actions">
+      <button class="tour-skip" id="tourSkip" onclick="endTour()"></button>
+      <button class="tour-next" id="tourNext" onclick="nextTour()"></button>
+    </div>
+  </div>
+</div>
 
 <!-- modal -->
 <div class="overlay" id="overlay" onclick="if(event.target===this) closeModal()">
@@ -1086,6 +1170,12 @@ function closeModal() {
   overlay.classList.remove("show");
 }
 document.addEventListener("keydown", e => {
+  /* mientras la guía está abierta, el teclado la maneja a ella */
+  if (typeof tourOpen === "function" && tourOpen()) {
+    if (e.key === "Escape") endTour();
+    if (e.key === "Enter" || e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); nextTour(); }
+    return;
+  }
   if (e.key === "Escape") closeModal();
   if (e.key === " " && !e.target.matches("input, select")) { e.preventDefault(); togglePlay(); }
   if ((e.key === "m" || e.key === "M") && !e.target.matches("input, select")) toggleMute();
@@ -1241,6 +1331,159 @@ function applyQuality() {
   const v = document.getElementById("qualSel").value;
   const filter = { full: "none", half: "blur(2px) saturate(.9)", quarter: "blur(4px) saturate(.75)" }[v];
   document.querySelectorAll(".monitor-screen .media").forEach(m => m.style.filter = filter);
+}
+
+/* ================= GUÍA RÁPIDA =================
+   Los carteles de bienvenida. Los textos se editan en config.js;
+   las zonas que señala cada paso están definidas aquí abajo. */
+const TOUR_ZONAS = {
+  trabajos: ["#binList", "#tracks"],
+  monitor:  ["#screen", "#playBtn"],
+  contacto: ["#contactBox", "#menuExportar"],
+};
+const GUIA = CONFIG.guia || {};
+const TOUR_STEPS = (GUIA.pasos || []).filter(p => TOUR_ZONAS[p.zona]);
+const tourEl = document.getElementById("tour");
+const tourCard = document.getElementById("tourCard");
+const SVGNS = "http://www.w3.org/2000/svg";
+let tourIdx = -1;
+
+function tourOpen() { return tourIdx >= 0; }
+
+function rectDist(a, b) {
+  const dx = Math.max(b.left - a.right, a.left - b.right, 0);
+  const dy = Math.max(b.top - a.bottom, a.top - b.bottom, 0);
+  return Math.hypot(dx, dy);
+}
+/* punto del borde de un rectángulo más cercano a otro punto */
+function edgePoint(r, p) {
+  return {
+    x: Math.max(r.left, Math.min(p.x, r.right)),
+    y: Math.max(r.top, Math.min(p.y, r.bottom)),
+  };
+}
+function svgEl(tag, attrs) {
+  const el = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+
+/* busca el hueco más despejado de la pantalla para poner el cartel */
+function bestCardPos(targets, cw, ch) {
+  const M = 18, W = innerWidth, H = innerHeight, N = 12;
+  const ux = Math.min(...targets.map(t => t.left)), ur = Math.max(...targets.map(t => t.right));
+  const uy = Math.min(...targets.map(t => t.top)), ub = Math.max(...targets.map(t => t.bottom));
+  const ucx = (ux + ur) / 2, ucy = (uy + ub) / 2;
+  const spanX = Math.max(0, W - cw - M * 2), spanY = Math.max(0, H - ch - M * 2);
+  let best = null;
+  for (let i = 0; i <= N; i++) {
+    for (let j = 0; j <= N; j++) {
+      const x = M + spanX * i / N, y = M + spanY * j / N;
+      const rect = { left: x, top: y, right: x + cw, bottom: y + ch };
+      const clear = Math.min(...targets.map(t => rectDist(rect, t)));
+      const near = Math.hypot(x + cw / 2 - ucx, y + ch / 2 - ucy);
+      const score = Math.min(clear, 150) * 10 - near * 0.35;
+      if (!best || score > best.score) best = { x, y, score };
+    }
+  }
+  return best;
+}
+
+function drawTour() {
+  const step = TOUR_STEPS[tourIdx];
+  const targets = TOUR_ZONAS[step.zona]
+    .map(s => document.querySelector(s))
+    .filter(Boolean)
+    .map(el => el.getBoundingClientRect())
+    .filter(r => r.width > 1 && r.height > 1);
+  if (!targets.length) return nextTour();
+
+  /* textos y botones */
+  document.getElementById("tourCount").textContent =
+    (tourIdx + 1) + " / " + TOUR_STEPS.length;
+  document.getElementById("tourTitle").textContent = step.titulo || "";
+  document.getElementById("tourText").textContent = step.texto || "";
+  document.getElementById("tourSkip").textContent = GUIA.saltar || "Saltar";
+  document.getElementById("tourNext").textContent =
+    tourIdx === TOUR_STEPS.length - 1 ? (GUIA.ultimo || "¡Vamos!") : (GUIA.siguiente || "Siguiente");
+
+  /* el cartel, en el hueco más libre */
+  tourCard.style.left = "0px";
+  tourCard.style.top = "0px";
+  const cw = tourCard.offsetWidth, ch = tourCard.offsetHeight;
+  const pos = bestCardPos(targets, cw, ch);
+  tourCard.style.left = Math.round(pos.x) + "px";
+  tourCard.style.top = Math.round(pos.y) + "px";
+  const card = { left: pos.x, top: pos.y, right: pos.x + cw, bottom: pos.y + ch };
+  const cardC = { x: pos.x + cw / 2, y: pos.y + ch / 2 };
+
+  /* fondo oscuro con un hueco por cada zona señalada */
+  document.getElementById("tourMaskBg").setAttribute("width", innerWidth);
+  document.getElementById("tourMaskBg").setAttribute("height", innerHeight);
+  const dim = document.getElementById("tourDim");
+  dim.setAttribute("width", innerWidth);
+  dim.setAttribute("height", innerHeight);
+
+  const holes = document.getElementById("tourHoles");
+  const rings = document.getElementById("tourRings");
+  const arrows = document.getElementById("tourArrows");
+  holes.textContent = rings.textContent = arrows.textContent = "";
+
+  targets.forEach(t => {
+    /* el recuadro se queda dentro de la pantalla para que se vea entero */
+    const pad = 4, EDGE = 2;
+    const x1 = Math.max(EDGE, t.left - pad), y1 = Math.max(EDGE, t.top - pad);
+    const x2 = Math.min(innerWidth - EDGE, t.right + pad);
+    const y2 = Math.min(innerHeight - EDGE, t.bottom + pad);
+    const box = { x: x1, y: y1, width: Math.max(0, x2 - x1), height: Math.max(0, y2 - y1), rx: 5 };
+    holes.appendChild(svgEl("rect", { ...box, fill: "#000" }));
+    rings.appendChild(svgEl("rect", { ...box, class: "tour-ring" }));
+
+    /* flecha curva del cartel a la zona */
+    const from = edgePoint(card, { x: t.left + t.width / 2, y: t.top + t.height / 2 });
+    let to = edgePoint(t, cardC);
+    const dx = to.x - from.x, dy = to.y - from.y;
+    const len = Math.hypot(dx, dy);
+    if (len < 26) return;                       // pegados: no hace falta flecha
+    to = { x: to.x - dx / len * 10, y: to.y - dy / len * 10 };   // deja aire antes del borde
+    const mx = (from.x + to.x) / 2, my = (from.y + to.y) / 2;
+    const bend = Math.max(12, Math.min(46, len * 0.17));
+    const cx = mx + (-dy / len) * bend, cy = my + (dx / len) * bend;
+    const path = svgEl("path", { class: "tour-arrow", d: `M${from.x} ${from.y} Q${cx} ${cy} ${to.x} ${to.y}` });
+    arrows.appendChild(path);
+    path.style.setProperty("--len", Math.ceil(path.getTotalLength()) + "px");
+    /* punta, orientada con la tangente final de la curva */
+    const ang = Math.atan2(to.y - cy, to.x - cx), s = 9;
+    const a1 = ang + Math.PI - 0.44, a2 = ang + Math.PI + 0.44;
+    arrows.appendChild(svgEl("path", {
+      class: "tour-head",
+      d: `M${to.x} ${to.y} L${to.x + Math.cos(a1) * s} ${to.y + Math.sin(a1) * s} `
+       + `L${to.x + Math.cos(a2) * s} ${to.y + Math.sin(a2) * s} Z`,
+    }));
+  });
+}
+
+function startTour(i) {
+  if (!TOUR_STEPS.length) return;
+  tourIdx = i || 0;
+  tourEl.hidden = false;
+  drawTour();
+}
+function nextTour() {
+  if (tourIdx + 1 >= TOUR_STEPS.length) return endTour();
+  tourIdx++;
+  drawTour();
+}
+function endTour() {
+  tourIdx = -1;
+  tourEl.hidden = true;
+}
+/* clic en la zona oscurecida = siguiente paso */
+document.getElementById("tourSvg").addEventListener("click", nextTour);
+addEventListener("resize", () => { if (tourOpen()) drawTour(); });
+
+if (GUIA.activa !== false && TOUR_STEPS.length) {
+  addEventListener("load", () => setTimeout(() => startTour(), 450));
 }
 
 /* audio meters */

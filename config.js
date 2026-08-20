@@ -82,6 +82,43 @@ const CONFIG = {
   graciasExportar: "Muchísimas gracias por su atención.",
 
   /* ------------------------------------------------------------
+     GUÍA RÁPIDA (los carteles que salen al abrir el CV)
+
+     Sirve para que quien entra vea que la página se puede tocar.
+     Sale sola al abrir, y se puede cerrar con "Saltar" o volver a
+     verla con el botón "?" de arriba a la derecha.
+
+     activa: pon false si prefieres quitarla del todo.
+     zona:   a qué parte de la pantalla señala la flecha. Usa sólo
+             estas tres palabras: "trabajos", "monitor" o "contacto".
+     Puedes cambiar los títulos y los textos, quitar un paso o
+     repetir una zona; el número (1/3, 2/3...) se calcula solo.
+  ------------------------------------------------------------ */
+  guia: {
+    activa: true,
+    saltar: "Saltar",
+    siguiente: "Siguiente",
+    ultimo: "¡Vamos!",
+    pasos: [
+      {
+        zona: "trabajos",
+        titulo: "Cada carpeta y cada clip es un trabajo",
+        texto: "Haz clic en una carpeta de la izquierda o en un clip de colores de la línea de tiempo para abrir su ficha completa.",
+      },
+      {
+        zona: "monitor",
+        titulo: "Dale al play",
+        texto: "El vídeo tiene sonido y puedes pausarlo cuando quieras. Arrastra la barra azul de la línea de tiempo para moverte por él.",
+      },
+      {
+        zona: "contacto",
+        titulo: "Hablamos cuando quieras",
+        texto: "Mi teléfono y mi correo están siempre a la vista, y en «Exportar» tienes el cierre.",
+      },
+    ],
+  },
+
+  /* ------------------------------------------------------------
      COLORES GENERALES DE LA INTERFAZ (opcional)
      Si no quieres tocarlos, déjalos como están.
   ------------------------------------------------------------ */

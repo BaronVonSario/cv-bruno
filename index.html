@@ -771,6 +771,259 @@
     .tour-arrow { stroke-dashoffset: 0; }
     .tour-head { opacity: 1; }
   }
+
+  /* ==================================================================
+     ============== MÓVIL · pantallas de menos de 768px ===============
+
+     Todo lo que hay dentro de este bloque sólo se aplica en pantallas
+     pequeñas, así que el diseño de ordenador se queda exactamente igual
+     que estaba. No se toca el HTML: los paneles se reordenan con CSS.
+
+     Los paneles se apilan en vertical en este orden:
+       MONITOR · LÍNEA DE TIEMPO · CONTACTO · EXPERIENCIA LABORAL · SOBRE MÍ
+
+     El monitor y la línea de tiempo se parecen más a una app de edición
+     de móvil (tipo CapCut): vídeo a todo el ancho, botonera grande y una
+     tira de clips que se arrastra con el dedo. En móvil los clips ya no
+     abren fichas; las fichas se abren desde EXPERIENCIA LABORAL.
+  ================================================================== */
+  @media (max-width: 767px) {
+
+    /* ---- la página deja de ser una rejilla fija y pasa a hacer scroll ---- */
+    html, body { height: auto; }
+    body { overflow: visible; overflow-x: hidden; }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: auto;
+      min-height: 100vh;
+      min-height: 100dvh;
+      gap: 3px;
+    }
+    /* .main y .right-col dejan de ser cajas: sus paneles pasan a ser hijos
+       directos de .app y así se pueden reordenar de uno en uno */
+    .main, .right-col { display: contents; }
+
+    /* ---- el orden de arriba a abajo ---- */
+    .topbar                          { order: 0; }
+    .panel.monitor                   { order: 1; }   /* MONITOR */
+    .timeline                        { order: 2; }   /* LÍNEA DE TIEMPO */
+    .right-col > .panel:first-child  { order: 3; }   /* METADATOS · CONTACTO */
+    .main > .panel:not(.monitor)     { order: 4; }   /* EXPERIENCIA LABORAL */
+    .right-col > .panel:last-child   { order: 5; }   /* SOBRE MÍ */
+
+    /* cada panel mide lo que necesite su contenido: los "flex:1" que
+       reparten la altura en el ordenador se anulan aquí (si no, algún
+       panel se quedaría con altura cero) */
+    .main > .panel,
+    .right-col > .panel { flex: 0 0 auto !important; }
+    .panel { overflow: visible; }
+    .monitor-screen-wrap,
+    .bin-list,
+    .about { flex: 0 0 auto; overflow: visible; }
+
+    /* ---- BARRA SUPERIOR: se queda pegada arriba ---- */
+    .topbar {
+      position: sticky; top: 0; z-index: 60;
+      flex: 0 0 46px;
+      padding: 0 10px;
+      gap: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar .logo { order: 0; font-size: 17px; }
+    .topbar .title {
+      order: 1;
+      text-align: left; font-size: 12.5px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      min-width: 0;
+    }
+    .topbar .title em { display: none; }
+    .topbar .right { order: 2; gap: 12px; }
+    /* fuera el nombre y los iconos que no hacen nada (buscar, pantalla completa) */
+    .topbar .right #userName,
+    .topbar .right .ico:not(.btn) { display: none; }
+    .topbar .right .ico.btn { width: 24px; height: 24px; }
+    .topbar .right .ico.btn svg { width: 17px; height: 17px; }
+    .topbar .avatar { width: 26px; height: 26px; }
+    /* "Editar" se va y "Exportar" pasa a ser un botón, como en las apps */
+    .topbar .menu { order: 3; }
+    .topbar .menu span:first-child { display: none; }
+    .topbar .menu #menuExportar {
+      background: var(--accent);
+      color: #fff; font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .topbar .menu #menuExportar:hover { background: var(--accent); color: #fff; }
+
+    /* ---- MONITOR: el vídeo a todo el ancho sobre negro ---- */
+    .panel.monitor { background: #000; }
+    .monitor .panel-header {
+      background: #000;
+      border-bottom: none;
+      padding: 8px 12px 4px;
+      gap: 10px;
+    }
+    .monitor .panel-header h2 {
+      flex: 1 1 auto; min-width: 0;
+      font-size: 11px; font-weight: 600; color: var(--text-dim);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .monitor .panel-header .dimlabel { font-size: 11px; margin-right: 4px; }
+    .monitor-screen-wrap { padding: 0; }
+    .monitor-screen { border: none; }
+    .monitor-screen .hint { display: none; }          /* en el móvil no hay ratón */
+    .monitor-screen .subs { padding: 7px 10px; }
+    .monitor-screen .subs span { font-size: clamp(11px, 3.4vw, 15px); }
+
+    /* ---- botonera y barra de arrastre del monitor ---- */
+    .transport { padding: 10px 12px 14px; }
+    /* la fila de códigos de tiempo se queda en dos: selectores y TC actual.
+       Si no caben (pantallas muy estrechas), el TC baja a la línea siguiente. */
+    .transport .tc-row {
+      display: flex; flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 8px;
+      margin-bottom: 9px;
+    }
+    .transport .tc-row .tc.in { display: none; }
+    .transport .tc-row .selects { gap: 6px; }
+    .fit-select { border-radius: 999px; padding: 4px 9px; font-size: 10.5px; }
+    .tc.current { margin-left: auto; font-size: 11.5px; }
+
+    /* barra de arrastre más alta, pensada para el dedo */
+    .scrubber { height: 18px; margin-bottom: 12px; touch-action: none; }
+    .scrubber .thumb { width: 10px; height: 24px; top: -3px; }
+
+    /* sólo los botones que funcionan, y más grandes */
+    .buttons { justify-content: space-around; gap: 0; }
+    .buttons .sep { display: none; }
+    .tbtn:disabled { display: none; }
+    .tbtn { width: 46px; height: 42px; }
+    .tbtn svg { width: 18px; height: 18px; }
+    .tbtn.play { width: 52px; height: 46px; }
+    .tbtn.play svg { width: 23px; height: 23px; }
+
+    /* ---- LÍNEA DE TIEMPO: tira de clips que se arrastra en horizontal ----
+       La tira mide más que la pantalla (--tl-ancho) para que los clips se
+       vean; se desplaza con el dedo. La columna V2/V1/A1 y la barra de
+       herramientas se quedan fijas a la izquierda mientras se desplaza. */
+    .timeline {
+      --tl-ancho: 880px;        /* ancho real de la tira */
+      --tl-canal: 34px;         /* columna de la izquierda (V2 · V1 · A1) */
+      background: #0f0f0f;
+      grid-template-rows: 30px 20px auto;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+    }
+    .timeline::-webkit-scrollbar { height: 0; }
+
+    /* el código de tiempo y las herramientas se quedan fijos a la izquierda
+       aunque la tira se desplace */
+    .tl-toolbar {
+      position: sticky; left: 0; z-index: 8;
+      width: fit-content;          /* así puede quedarse fijo al desplazar la tira */
+      background: #0f0f0f;
+      border-bottom: none;
+      padding: 0 12px;
+      gap: 16px;
+    }
+    /* la pestaña y el aviso de "clic en un clip" no hacen falta aquí */
+    .tl-toolbar .tab,
+    .tl-toolbar .hint { display: none; }
+    .tl-toolbar .tc { color: #fff; font-family: "Consolas", monospace; font-size: 12.5px; }
+    .tl-toolbar .tl-tools { gap: 14px; }
+
+    .ruler {
+      margin-left: var(--tl-canal);
+      width: calc(var(--tl-ancho) - var(--tl-canal));
+      touch-action: none;                 /* aquí se arrastra el vídeo */
+    }
+    /* con tan poco sitio, se deja una marca de tiempo de cada tres */
+    .ruler span:not(:nth-of-type(3n+1)) { display: none; }
+
+    .tracks-wrap { width: var(--tl-ancho); height: 134px; }
+    .track-heads {
+      width: var(--tl-canal);
+      position: sticky; left: 0; z-index: 6;
+      background: #0f0f0f;
+    }
+    .track-head { justify-content: center; padding: 0; gap: 3px; font-size: 0; }
+    .track-head b { font-size: 9px; }
+    .track-head svg { display: none; }
+    .track-head .dot { width: 6px; height: 6px; }
+
+    /* los clips son sólo la foto del montaje: ya no abren ventanas */
+    .track .clip { pointer-events: none; border-radius: 4px; }
+    .track .clip:hover { filter: none; transform: none; box-shadow: inset 0 10px 0 rgba(255,255,255,.12); }
+    .audio-clip { border-radius: 4px; }
+    .audio-clip .aname { font-size: 9px; }
+    /* línea de reproducción fina y blanca */
+    .playhead { width: 2px; background: #fff; }
+    .playhead::before { display: none; }
+
+    /* ---- CONTACTO ---- */
+    .contact { padding: 6px 14px 16px; }
+    .contact h3 { font-size: 16px; letter-spacing: 1.5px; padding: 6px 0; }
+    .contact .contact-body { max-height: 340px; }
+    .contact p { margin: 8px 0 8px 18px; font-size: 14px; overflow-wrap: anywhere; }
+
+    /* ---- EXPERIENCIA LABORAL ---- */
+    .searchrow { flex-wrap: wrap; padding: 8px 10px; }
+    .searchrow .search-wrap { flex: 1 1 100%; }
+    .searchrow input { font-size: 16px; padding: 7px 8px 7px 26px; }  /* 16px evita el zoom al escribir */
+    .searchrow .expand-all { flex: 0 0 auto; padding: 6px 11px; }
+    .searchrow .count { margin-left: auto; }
+
+    .bin-list { padding: 2px 0 6px; }
+    .bin-row { padding: 10px; gap: 9px; }
+    .bin-row .name {
+      white-space: normal; overflow: visible; text-overflow: clip;
+      line-height: 1.3;
+    }
+    .bin.open .bin-children { max-height: 900px; }
+    .bin-child { padding: 9px 12px 9px 36px; white-space: normal; line-height: 1.3; }
+    .panel-footer { gap: 18px; padding: 8px 12px; }
+
+    /* ---- SOBRE MÍ ---- */
+    .about { padding: 4px 8px 8px; }
+    .about-row { grid-template-columns: 46px 1fr; gap: 8px; padding: 9px 6px; }
+    .about-row .vtag { font-size: 11px; }
+    .about-row .txt { font-size: 13.5px; }
+    .meters { padding: 8px 12px 10px; }
+
+    /* ---- FICHAS (ventanas) ---- */
+    .modal { width: calc(100vw - 20px); max-height: 86dvh; }
+    .modal-body { padding: 14px 16px 20px; }
+    .modal-body h3 { font-size: 16px; }
+    .modal-head { gap: 12px; }
+    .modal-head .head-logo { max-width: 84px; max-height: 46px; }
+    .meta-table td:first-child { width: 96px; }
+    .brand-row { gap: 10px; padding: 8px 10px; }
+    .brand-row img, .brand-row .noimg { width: 58px; height: 30px; }
+  }
+
+  /* Móvil tumbado (poca altura): el vídeo se ajusta a lo alto para que
+     debajo se siga viendo la línea de tiempo sin tener que desplazar. */
+  @media (max-width: 767px) and (orientation: landscape) and (max-height: 520px) {
+    .monitor-screen {
+      width: auto;
+      max-width: 100%;
+      height: 62vh;
+      height: 62svh;
+    }
+  }
+
+  /* En pantallas táctiles el "hover" se queda pegado después de tocar:
+     se quitan los desplazamientos para que nada se mueva de sitio. */
+  @media (hover: none) {
+    .about-row:hover,
+    .brand-row:hover { transform: none; }
+  }
 </style>
 </head>
 <body>
@@ -1497,12 +1750,21 @@ const TOUR_ZONAS = {
   monitor:  ["#screen", "#playBtn"],
   contacto: ["#contactBox", "#menuExportar"],
 };
+/* En móvil los paneles van apilados y no cabe todo a la vez en la pantalla:
+   cada paso señala una sola zona y la guía lleva la página hasta ella. */
+const TOUR_ZONAS_MOVIL = {
+  trabajos: ["#binList"],
+  monitor:  ["#screen"],
+  contacto: ["#contactBox"],
+};
+const esMovil = () => matchMedia("(max-width: 767px)").matches;
 const GUIA = CONFIG.guia || {};
 const TOUR_STEPS = (GUIA.pasos || []).filter(p => TOUR_ZONAS[p.zona]);
 const tourEl = document.getElementById("tour");
 const tourCard = document.getElementById("tourCard");
 const SVGNS = "http://www.w3.org/2000/svg";
 let tourIdx = -1;
+let tourSigueZona = true, tourScrollRaf = 0;
 
 function tourOpen() { return tourIdx >= 0; }
 
@@ -1547,7 +1809,14 @@ function bestCardPos(targets, cw, ch) {
 
 function drawTour() {
   const step = TOUR_STEPS[tourIdx];
-  const targets = TOUR_ZONAS[step.zona]
+  const movil = esMovil();
+  const zonas = (movil && TOUR_ZONAS_MOVIL[step.zona]) || TOUR_ZONAS[step.zona];
+  /* en móvil, antes de dibujar se lleva la zona al centro de la pantalla */
+  if (movil && tourSigueZona) {
+    const primera = document.querySelector(zonas[0]);
+    if (primera) primera.scrollIntoView({ block: "center", behavior: "instant" });
+  }
+  const targets = zonas
     .map(s => document.querySelector(s))
     .filter(Boolean)
     .map(el => el.getBoundingClientRect())
@@ -1558,7 +1827,8 @@ function drawTour() {
   document.getElementById("tourCount").textContent =
     (tourIdx + 1) + " / " + TOUR_STEPS.length;
   document.getElementById("tourTitle").textContent = step.titulo || "";
-  document.getElementById("tourText").textContent = step.texto || "";
+  document.getElementById("tourText").textContent =
+    (movil && step.textoMovil) || step.texto || "";
   document.getElementById("tourSkip").textContent = GUIA.saltar || "Saltar";
   document.getElementById("tourNext").textContent =
     tourIdx === TOUR_STEPS.length - 1 ? (GUIA.ultimo || "¡Vamos!") : (GUIA.siguiente || "Siguiente");
@@ -1637,6 +1907,17 @@ function endTour() {
 /* clic en la zona oscurecida = siguiente paso */
 document.getElementById("tourSvg").addEventListener("click", nextTour);
 addEventListener("resize", () => { if (tourOpen()) drawTour(); });
+/* en móvil la página se desplaza: si se mueve con la guía abierta, se vuelve
+   a dibujar (sin volver a mover la vista) para que los recuadros no se queden atrás */
+addEventListener("scroll", () => {
+  if (!tourOpen() || !esMovil() || tourScrollRaf) return;
+  tourScrollRaf = requestAnimationFrame(() => {
+    tourScrollRaf = 0;
+    tourSigueZona = false;
+    drawTour();
+    tourSigueZona = true;
+  });
+}, { passive: true });
 
 if (GUIA.activa !== false && TOUR_STEPS.length) {
   addEventListener("load", () => setTimeout(() => startTour(), 450));

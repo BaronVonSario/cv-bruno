@@ -115,6 +115,9 @@ const CONFIG = {
      activa: pon false si prefieres quitarla del todo.
      zona:   a qué parte de la pantalla señala la flecha. Usa sólo
              estas tres palabras: "trabajos", "monitor" o "contacto".
+     textoMovil: opcional. Si lo escribes, es el texto que se ve en el
+             móvil, donde los paneles van apilados y no hay "izquierda".
+             Si no lo pones, en el móvil se ve el texto normal.
      Puedes cambiar los títulos y los textos, quitar un paso o
      repetir una zona; el número (1/3, 2/3...) se calcula solo.
   ------------------------------------------------------------ */
@@ -128,11 +131,13 @@ const CONFIG = {
         zona: "trabajos",
         titulo: "Cada carpeta y cada clip es un trabajo",
         texto: "Haz clic en una carpeta de la izquierda o en un clip de colores de la línea de tiempo para abrir su ficha completa.",
+        textoMovil: "Toca una carpeta de EXPERIENCIA LABORAL para abrir la ficha completa de ese trabajo.",
       },
       {
         zona: "monitor",
         titulo: "Dale al play",
         texto: "El vídeo tiene sonido y puedes pausarlo cuando quieras. Arrastra la barra azul de la línea de tiempo para moverte por él.",
+        textoMovil: "El vídeo tiene sonido y puedes pausarlo cuando quieras. Arrastra la barra de debajo del vídeo para moverte por él.",
       },
       {
         zona: "contacto",

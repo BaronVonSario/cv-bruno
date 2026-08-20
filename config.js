@@ -46,6 +46,10 @@ const CONFIG = {
   ------------------------------------------------------------ */
   telefono: "626 73 61 82",                          // se muestra tal cual lo escribas
   email: "bruno.baezavaqueiro@gmail.com",
+  // Tercera línea de CONTACTO: al hacer clic se descarga el PDF.
+  // El archivo tiene que estar dentro de la carpeta assets.
+  curriculumTexto: "Currículum Formal",
+  curriculumArchivo: "assets/cv-bruno-baeza-2026.pdf",
 
   /* ------------------------------------------------------------
      VÍDEO DEL MONITOR
@@ -63,14 +67,34 @@ const CONFIG = {
 
   /* ------------------------------------------------------------
      SOBRE MÍ  (las frases de la derecha, en orden)
-     Puedes añadir más líneas o quitar alguna: cada frase va entre
-     comillas y con una coma detrás.
+
+     Cada frase lleva su código de tiempo del vídeo: en ese trozo
+     la frase sale como subtítulo sobre el vídeo, y el código se ve
+     debajo del texto en el panel de la derecha.
+     Los códigos van en horas:minutos:segundos:fotogramas.
+     Si una frase no tiene código, se muestra sin subtítulo.
   ------------------------------------------------------------ */
   sobreMi: [
-    "Amplia capacidad para trabajar en proyectos simultáneos y plazos cortos.",
-    "Creativo, con iniciativa y buena actitud de equipo.",
-    "Facilidad para integrarme en proyectos desde cero, sumando ideas para su desarrollo.",
-    "Más de soluciones que de problemas, más práctico que teórico, y tan empático como exigente.",
+    {
+      texto: "Creativo, con iniciativa y buena actitud de equipo.",
+      desde: "00:00:13:17",
+      hasta: "00:00:26:11",
+    },
+    {
+      texto: "Amplia capacidad para trabajar en proyectos simultáneos y plazos cortos.",
+      desde: "00:00:45:19",
+      hasta: "00:00:55:21",
+    },
+    {
+      texto: "Facilidad para integrarme en proyectos desde cero, sumando ideas para su desarrollo.",
+      desde: "00:01:25:14",
+      hasta: "00:01:36:19",
+    },
+    {
+      texto: "Más de soluciones que de problemas, más práctico que teórico, y tan empático como exigente.",
+      desde: "00:01:42:08",
+      hasta: "00:01:53:04",
+    },
   ],
 
   /* ------------------------------------------------------------

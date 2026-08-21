@@ -68,11 +68,10 @@ const CONFIG = {
   /* ------------------------------------------------------------
      SOBRE MÍ  (las frases de la derecha, en orden)
 
-     Cada frase lleva su código de tiempo del vídeo: en ese trozo
-     la frase sale como subtítulo sobre el vídeo, y el código se ve
-     debajo del texto en el panel de la derecha.
+     Cada frase puede llevar su código de tiempo del vídeo, que se ve
+     debajo del texto, en el panel de la derecha.
      Los códigos van en horas:minutos:segundos:fotogramas.
-     Si una frase no tiene código, se muestra sin subtítulo.
+     Si una frase no lleva códigos, sólo se ve el texto.
   ------------------------------------------------------------ */
   sobreMi: [
     {
@@ -114,10 +113,15 @@ const CONFIG = {
 
      activa: pon false si prefieres quitarla del todo.
      zona:   a qué parte de la pantalla señala la flecha. Usa sólo
-             estas tres palabras: "trabajos", "monitor" o "contacto".
-     textoMovil: opcional. Si lo escribes, es el texto que se ve en el
-             móvil, donde los paneles van apilados y no hay "izquierda".
-             Si no lo pones, en el móvil se ve el texto normal.
+             estas tres palabras: "monitor" (el vídeo y la línea de
+             tiempo), "trabajos" (las carpetas y los clips de colores)
+             o "contacto".
+     tituloMovil / textoMovil: opcionales. Si los escribes, son el
+             título y el texto que se ven en el móvil, donde los paneles
+             van apilados y no se puede hacer clic en los clips. Si no
+             los pones, en el móvil sale el título y el texto normales.
+     El orden de esta lista es el orden en que salen los carteles, y al
+     cerrar el último la página vuelve sola al principio.
      Puedes cambiar los títulos y los textos, quitar un paso o
      repetir una zona; el número (1/3, 2/3...) se calcula solo.
   ------------------------------------------------------------ */
@@ -128,21 +132,21 @@ const CONFIG = {
     ultimo: "¡Vamos!",
     pasos: [
       {
-        zona: "trabajos",
-        titulo: "Cada carpeta y cada clip es un trabajo",
-        texto: "Haz clic en una carpeta de la izquierda o en un clip de colores de la línea de tiempo para abrir su ficha completa.",
-        textoMovil: "Toca una carpeta de EXPERIENCIA LABORAL para abrir la ficha completa de ese trabajo.",
-      },
-      {
         zona: "monitor",
         titulo: "Dale al play",
-        texto: "El vídeo tiene sonido y puedes pausarlo cuando quieras. Arrastra la barra azul de la línea de tiempo para moverte por él.",
-        textoMovil: "El vídeo tiene sonido y puedes pausarlo cuando quieras. Arrastra la barra de debajo del vídeo para moverte por él.",
+        texto: "El vídeo tiene sonido y puedes silenciarlo y pausarlo cuando quieras, muévete por el timeline como quieras.",
+      },
+      {
+        zona: "trabajos",
+        titulo: "Cada carpeta y cada clip es un trabajo",
+        texto: "Haz clic en una carpeta o en el clip de colores para abrir su ficha completa.",
+        tituloMovil: "Cada carpeta es un trabajo",
+        textoMovil: "Haz clic en una carpeta para abrir su ficha completa.",
       },
       {
         zona: "contacto",
         titulo: "Hablamos cuando quieras",
-        texto: "Mi teléfono y mi correo están siempre a la vista, y en «Exportar» tienes el cierre.",
+        texto: "Aquí tienes mi teléfono y mi correo, y si te queda alguna duda, siempre puedes exportar al final.",
       },
     ],
   },

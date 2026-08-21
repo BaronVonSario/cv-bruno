@@ -263,26 +263,6 @@
   }
   .monitor-screen:hover .hint { opacity: 1; }
 
-  /* subtítulos: franja negra al 30% en la parte baja del vídeo */
-  .monitor-screen .subs {
-    position: absolute; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, .3);
-    padding: 9px 14px;
-    text-align: center;
-    z-index: 3;
-    opacity: 0;
-    transition: opacity .2s ease;
-    pointer-events: none;
-  }
-  .monitor-screen .subs.on { opacity: 1; }
-  .monitor-screen .subs span {
-    color: #fff;
-    font-size: clamp(11px, 1.55vw, 17px);
-    font-weight: 600;
-    line-height: 1.35;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, .9);
-  }
-
   .transport { padding: 6px 16px 10px; flex-shrink: 0; }
   /* 3 columnas: TC de entrada · selectores centrados · TC actual */
   .transport .tc-row {
@@ -421,6 +401,10 @@
   }
   .about-row .tcline .sep { opacity: .6; margin: 0 3px; }
   .about-row:hover .tcline { color: var(--accent); }
+
+  /* botón grande de EXPORTAR: en el ordenador no se ve (está en la barra
+     de arriba); sólo aparece en móvil, al final de la página */
+  .export-cta { display: none; }
 
   .meters {
     display: grid;
@@ -875,8 +859,6 @@
     .monitor-screen-wrap { padding: 0; }
     .monitor-screen { border: none; }
     .monitor-screen .hint { display: none; }          /* en el móvil no hay ratón */
-    .monitor-screen .subs { padding: 7px 10px; }
-    .monitor-screen .subs span { font-size: clamp(11px, 3.4vw, 15px); }
 
     /* ---- botonera y barra de arrastre del monitor ---- */
     .transport { padding: 10px 12px 14px; }
@@ -994,7 +976,27 @@
     .about-row { grid-template-columns: 46px 1fr; gap: 8px; padding: 9px 6px; }
     .about-row .vtag { font-size: 11px; }
     .about-row .txt { font-size: 13.5px; }
-    .meters { padding: 8px 12px 10px; }
+    /* ---- EXPORTAR: el botón grande del final ---- */
+    .export-cta {
+      display: block;
+      border-top: 3px solid #000;      /* la misma junta negra que separa los paneles */
+      padding: 14px 12px 16px;
+    }
+    .export-btn {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: var(--accent);
+      border: none; border-radius: 6px;
+      color: #fff;
+      font-family: inherit; font-size: 15.5px; font-weight: 700; letter-spacing: .5px;
+      padding: 15px 18px;
+      cursor: pointer;
+    }
+    .export-btn svg { width: 17px; height: 17px; display: block; fill: currentColor; }
+    .export-btn:active { filter: brightness(.9); }
+
+    /* los vúmetros se quedan al final del todo */
+    .meters { padding: 10px 12px 12px; }
 
     /* ---- FICHAS (ventanas) ---- */
     .modal { width: calc(100vw - 20px); max-height: 86dvh; }
@@ -1081,7 +1083,6 @@
           <video class="media" id="video" playsinline preload="metadata"></video>
           <img class="media" id="media" src="" alt="Fotografía del monitor">
           <span class="rec">REC</span>
-          <div class="subs" id="subs"><span id="subsText"></span></div>
           <span class="hint">clic = play / pausa</span>
         </div>
       </div>
@@ -1175,6 +1176,13 @@
           <span class="hamburger">≡</span>
         </div>
         <div class="about" id="aboutRows"></div>
+        <!-- botón grande de EXPORTAR: sólo se ve en móvil (ver el bloque @media del final del CSS) -->
+        <div class="export-cta">
+          <button class="export-btn" onclick="openExport()">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M7.15 1.6h1.7v7.2l2.3-2.3 1.2 1.2L8 12.05 3.65 7.7l1.2-1.2 2.3 2.3z"/><path d="M2.4 12.5h11.2v1.9H2.4z"/></svg>
+            Exportar
+          </button>
+        </div>
         <div class="meters">
           <span class="lbl">A1</span><div class="meter"><i id="m1"></i></div>
           <span class="lbl">A2</span><div class="meter"><i id="m2"></i></div>
@@ -1343,16 +1351,9 @@ if (CONFIG.curriculumArchivo) {
 /* ---- SOBRE MÍ: frases con su código de tiempo ----
    Cada entrada puede ser un texto suelto o { texto, desde, hasta }. */
 const FPS = 24;
-function tcToSec(tc) {
-  if (typeof tc !== "string") return null;
-  const p = tc.split(":").map(Number);
-  if (p.length !== 4 || p.some(isNaN)) return null;
-  return p[0] * 3600 + p[1] * 60 + p[2] + p[3] / FPS;
-}
 const SOBRE_MI = (CONFIG.sobreMi || []).map(f => {
   const o = typeof f === "string" ? { texto: f } : (f || {});
-  return { texto: o.texto || "", desde: o.desde || null, hasta: o.hasta || null,
-           ini: tcToSec(o.desde), fin: tcToSec(o.hasta) };
+  return { texto: o.texto || "", desde: o.desde || null, hasta: o.hasta || null };
 });
 document.getElementById("aboutRows").innerHTML = SOBRE_MI.map((f, i) => `
   <div class="about-row">
@@ -1622,24 +1623,8 @@ function render() {
   document.getElementById("tcCurrent").textContent = fmtTC(pos);
   document.getElementById("tcTimeline").textContent = fmtTC(pos);
   document.getElementById("tcTotal").textContent = fmtTC(100);
-  renderSubs();
 }
 
-/* subtítulos: la frase de SOBRE MÍ que toque, sólo mientras se reproduce */
-const subsBox = document.getElementById("subs");
-const subsText = document.getElementById("subsText");
-function renderSubs() {
-  const t = video ? video.currentTime : duration() * pos / 100;
-  const hit = playing
-    ? SOBRE_MI.find(f => f.ini !== null && f.fin !== null && t >= f.ini && t <= f.fin)
-    : null;
-  if (hit) {
-    if (subsText.textContent !== hit.texto) subsText.textContent = hit.texto;
-    subsBox.classList.add("on");
-  } else {
-    subsBox.classList.remove("on");
-  }
-}
 function tick(t) {
   if (video) {
     pos = video.duration ? video.currentTime / video.duration * 100 : 0;
@@ -1747,14 +1732,14 @@ function applyQuality() {
    las zonas que señala cada paso están definidas aquí abajo. */
 const TOUR_ZONAS = {
   trabajos: ["#binList", "#tracks"],
-  monitor:  ["#screen", "#playBtn"],
+  monitor:  ["#screen", "#playBtn", "#tracks"],   /* monitor y línea de tiempo */
   contacto: ["#contactBox", "#menuExportar"],
 };
 /* En móvil los paneles van apilados y no cabe todo a la vez en la pantalla:
    cada paso señala una sola zona y la guía lleva la página hasta ella. */
 const TOUR_ZONAS_MOVIL = {
   trabajos: ["#binList"],
-  monitor:  ["#screen"],
+  monitor:  ["#screen", "#tracks"],
   contacto: ["#contactBox"],
 };
 const esMovil = () => matchMedia("(max-width: 767px)").matches;
@@ -1826,7 +1811,8 @@ function drawTour() {
   /* textos y botones */
   document.getElementById("tourCount").textContent =
     (tourIdx + 1) + " / " + TOUR_STEPS.length;
-  document.getElementById("tourTitle").textContent = step.titulo || "";
+  document.getElementById("tourTitle").textContent =
+    (movil && step.tituloMovil) || step.titulo || "";
   document.getElementById("tourText").textContent =
     (movil && step.textoMovil) || step.texto || "";
   document.getElementById("tourSkip").textContent = GUIA.saltar || "Saltar";
@@ -1903,6 +1889,8 @@ function nextTour() {
 function endTour() {
   tourIdx = -1;
   tourEl.hidden = true;
+  /* al terminar la guía, la página vuelve al principio */
+  scrollTo({ top: 0, behavior: "smooth" });
 }
 /* clic en la zona oscurecida = siguiente paso */
 document.getElementById("tourSvg").addEventListener("click", nextTour);
